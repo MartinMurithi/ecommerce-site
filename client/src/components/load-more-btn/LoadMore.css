@@ -1,0 +1,16 @@
+
+.loadMoreSection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.loadMoreBtn{
+    padding: 8px 16px;
+    background-color: transparent;
+    outline: transparent;
+    border: 1px solid #366699;
+    cursor: pointer;
+    font-size: .9rem;
+}
