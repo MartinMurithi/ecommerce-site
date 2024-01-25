@@ -11,7 +11,7 @@ function Navbar() {
   return (
     <nav>
       <div className="navSection">
-        <div className="logo">Amazonne</div>
+        <h2 className="logo">Amazonne</h2>
 
         <div className="searchBarParent">
           <div className="categoriesDropdown">

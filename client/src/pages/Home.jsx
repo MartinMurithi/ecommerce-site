@@ -6,6 +6,7 @@ import Sort from "../components/sort-products/Sort";
 import ProductCard from "../components/product-card/ProductCard";
 import LoadMore from "../components/load-more-btn/LoadMore";
 import Subscription from "../components/subscription/Subscription";
+import Footer from "../components/footer/Footer";
 
 function Home() {
   return (
@@ -17,6 +18,7 @@ function Home() {
       <ProductCard />
       <LoadMore />
       <Subscription />
+      <Footer />
     </>
   );
 }

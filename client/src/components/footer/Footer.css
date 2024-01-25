@@ -1,0 +1,43 @@
+.logo {
+  font-size: 2.2rem;
+  color: #366699;
+}
+
+footer {
+  width: 90%;
+  max-width: 90%;
+  background-color: #f4f4f4;
+  margin: 50px auto 40px auto;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.mobileInquiry, 
+.mobile{
+  font-size: 1rem;
+}
+
+.colTitle {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.col1,
+.col2,
+.col3,
+.col4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.colLink {
+  font-size: 0.9rem;
+  color: #5f5f5f;
+}
+
+.colLink:hover {
+  color: #366699;
+}
