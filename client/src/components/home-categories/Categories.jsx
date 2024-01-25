@@ -13,8 +13,8 @@ function Categories() {
                 src={category.imgPath}
                 alt={category.category}
                 loading="lazy"
-                width="150px"
-                height="150px"
+                width="130px"
+                height="130px"
                 className="categoryImg"
               />
               <p className="categoryName">{ category.category }</p>
