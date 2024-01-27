@@ -47,7 +47,7 @@ const postProducts = (req, res) => {
           stock: stock,
           category: category,
           color: color,
-        },
+        }
       });
     }
   );
