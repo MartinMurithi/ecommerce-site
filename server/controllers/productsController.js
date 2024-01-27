@@ -10,7 +10,6 @@ const getProducts = (req, res) => {
 
 const getProductById = (req, res) => {
   const id = parseInt(req.params.id);
-  console.log(id);
   pool.query(queries.getProductById, [id], (error, results) => {
     // Check if product exists
     if (!results.rows.length) {
@@ -24,18 +23,12 @@ const getProductById = (req, res) => {
 };
 
 const postProducts = (req, res) => {
-  const { prod_name, prod_desc, price, stock, category, color } = req.body;
-  console.log(prod_name);
+  const { prod_name, prod_desc, price, stock, category, color, images } =
+    req.body;
+    
   pool.query(
     queries.postProductQuery,
-    [
-      prod_name,
-      prod_desc,
-      price,
-      stock,
-      category,
-      color,
-    ],
+    [prod_name, prod_desc, price, stock, category, color, images],
     (error, results) => {
       if (error) return res.status(500).json({ error: error.message });
       res.status(201).json({
@@ -47,7 +40,8 @@ const postProducts = (req, res) => {
           stock: stock,
           category: category,
           color: color,
-        }
+          images: images,
+        },
       });
     }
   );
@@ -79,8 +73,10 @@ const deleteProduct = (req, res) => {
 };
 
 const updateProduct = (req, res) => {
-  const { prod_name, prod_desc, price, stock, category, color } = req.body;
+  const { prod_name, prod_desc, price, stock, category, color, images } =
+    req.body;
   const id = parseInt(req.params.id);
+
   // Check if product exists before updating
   pool.query(queries.getProductById, [id], (error, results) => {
     if (error) {
@@ -93,15 +89,7 @@ const updateProduct = (req, res) => {
     // Update product if it exists
     pool.query(
       queries.updateProductQuery,
-      [
-        prod_name,
-        prod_desc,
-        price,
-        stock,
-        category,
-        color,
-        id
-      ],
+      [prod_name, prod_desc, price, stock, category, color, images, id],
       (error, results) => {
         if (error) {
           return res.status(500).json({ Error: error.message });
@@ -115,6 +103,7 @@ const updateProduct = (req, res) => {
             stock: stock,
             category: category,
             color: color,
+            images: images,
           },
         });
       }
@@ -122,15 +111,14 @@ const updateProduct = (req, res) => {
   });
 };
 
-
-const deleteAllProducts = (req, res)=>{
-    pool.query(queries.deleteAllProductsQuery, (error, results)=>{
-        if(error) {
-            return res.status(500).json({Error: error.message});
-        }
-        res.status(200).json({Message: "All products deleted successfully."});
-    })
-}
+const deleteAllProducts = (req, res) => {
+  pool.query(queries.deleteAllProductsQuery, (error, results) => {
+    if (error) {
+      return res.status(500).json({ Error: error.message });
+    }
+    res.status(200).json({ Message: "All products deleted successfully." });
+  });
+};
 
 module.exports = {
   getProducts,
@@ -138,5 +126,5 @@ module.exports = {
   postProducts,
   deleteProduct,
   updateProduct,
-  deleteAllProducts
+  deleteAllProducts,
 };
