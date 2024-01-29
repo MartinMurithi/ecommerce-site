@@ -23,12 +23,17 @@ const getProductById = (req, res) => {
 };
 
 const postProducts = (req, res) => {
-  const { prod_name, prod_desc, price, stock, category, color, images } =
-    req.body;
-    
+  const { prod_name, prod_desc, price, stock, category } = req.body;
+  const images = req.files;
+  console.log(images);
+
+  if (!req.files) {
+    return res.status(500).json({ Error: "Images are required" });
+  }
+
   pool.query(
     queries.postProductQuery,
-    [prod_name, prod_desc, price, stock, category, color, images],
+    [prod_name, prod_desc, price, stock, category, images],
     (error, results) => {
       if (error) return res.status(500).json({ error: error.message });
       res.status(201).json({
@@ -39,8 +44,7 @@ const postProducts = (req, res) => {
           price: price,
           stock: stock,
           category: category,
-          color: color,
-          images: images,
+          images: images.map(image=> ({path: image.path}))
         },
       });
     }

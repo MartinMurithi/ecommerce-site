@@ -1,4 +1,6 @@
 const { Router } = require("express");
+const upload = require("../config/Multer");
+const multerErrHandler = require("../middleware/MulterErrHandler");
 const {
   getProducts,
   postProducts,
@@ -12,7 +14,7 @@ const router = Router();
 
 router.get("/products", getProducts);
 router.get("/products/:id", getProductById);
-router.post("/add-product", postProducts);
+router.post("/add-product", upload.array('images', 5), multerErrHandler, postProducts);
 router.delete("/delete-product/:id", deleteProduct);
 router.delete("/delete-all-products", deleteAllProducts);
 router.put("/update-product/:id", updateProduct);
