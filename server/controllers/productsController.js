@@ -25,7 +25,6 @@ const getProductById = (req, res) => {
 const postProducts = (req, res) => {
   const { prod_name, prod_desc, price, stock, category } = req.body;
   const images = req.files;
-  console.log(images);
 
   if (!req.files) {
     return res.status(500).json({ Error: "Images are required" });
@@ -44,7 +43,7 @@ const postProducts = (req, res) => {
           price: price,
           stock: stock,
           category: category,
-          images: images.map(image=> ({path: image.path}))
+          images: images.map((image) => ({ path: image.path })),
         },
       });
     }
@@ -77,8 +76,12 @@ const deleteProduct = (req, res) => {
 };
 
 const updateProduct = (req, res) => {
-  const { prod_name, prod_desc, price, stock, category, color, images } =
-    req.body;
+  const { prod_name, prod_desc, price, stock, category } = req.body;
+  const images = req.files;
+
+  if (!req.files) {
+    return res.status(500).json({ Error: "Images are required" });
+  }
   const id = parseInt(req.params.id);
 
   // Check if product exists before updating
@@ -93,7 +96,7 @@ const updateProduct = (req, res) => {
     // Update product if it exists
     pool.query(
       queries.updateProductQuery,
-      [prod_name, prod_desc, price, stock, category, color, images, id],
+      [prod_name, prod_desc, price, stock, category, images, id],
       (error, results) => {
         if (error) {
           return res.status(500).json({ Error: error.message });
@@ -106,8 +109,7 @@ const updateProduct = (req, res) => {
             price: price,
             stock: stock,
             category: category,
-            color: color,
-            images: images,
+            images: images.map((image)=>({path: image.path})),
           },
         });
       }
