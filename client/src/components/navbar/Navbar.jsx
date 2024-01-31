@@ -4,6 +4,7 @@ import {
   MdOutlineAccountCircle,
   MdOutlineShoppingCart,
 } from "react-icons/md";
+import { NavLink } from "react-router-dom";
 
 import "./Navbar.css";
 
@@ -11,7 +12,9 @@ function Navbar() {
   return (
     <nav>
       <div className="navSection">
-        <h2 className="logo">Amazonne</h2>
+        <NavLink to="/" className="logo">
+          Amazonne
+        </NavLink>
 
         <div className="searchBarParent">
           <div className="categoriesDropdown">
@@ -51,14 +54,23 @@ function Navbar() {
             />
             <span className="lang">EN</span>
           </div>
-          <div className="navAccount">
-            <MdOutlineAccountCircle className="accountIcon" />
-            <p className="accountText">SignIn/Register</p>
-          </div>
 
+          {/* Shopping Cart */}
           <div className="navCart">
             <MdOutlineShoppingCart className="cartIcon" />
-            <p className="cartText">Cart</p>
+            <NavLink to='/cart' className="cartText">Cart</NavLink>
+          </div>
+          {/* User account */}
+          <div className="navAccount">
+            <MdOutlineAccountCircle className="accountIcon" />
+            {/* When user clicks this, it takes him/her to a login page */}
+            <NavLink to="/login" className="accountText">
+              My Account
+            </NavLink>
+
+            {/* <NavLink to="/register" className="accountText">
+              Register
+            </NavLink> */}
           </div>
         </div>
       </div>

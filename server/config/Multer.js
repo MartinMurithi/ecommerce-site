@@ -1,5 +1,5 @@
 const multer = require("multer");
-const maxFileSize = 1024 * 1024 * 2;
+const maxFileSize = 1024 * 1024 * 1;
 
 // The disk storage specifies the storage location  and the naming convention of the files.
 const storage = multer.diskStorage({

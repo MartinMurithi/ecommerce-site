@@ -70,7 +70,7 @@ function ProductCard() {
             <p className="cardTitle">Camera</p>
             <h5 className="cardPrice">Ksh.89.00</h5>
           </div>
-        </NavLink>{" "}
+        </NavLink>
       </section>
 
       <section className="productCard">
