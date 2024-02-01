@@ -41,6 +41,8 @@ const postProducts = async (req, res) => {
             reject(error);
           } else {
             resolve(result.secure_url);
+            console.log(result.public_id);
+            console.log(result);
           }
         });
       });
@@ -70,31 +72,6 @@ const postProducts = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
-
-const deleteProduct = (req, res) => {
-  const id = parseInt(req.params.id);
-  pool.query(queries.getProductById, [id], (error, results) => {
-    if (error) {
-      return res.status(500).json({ Error: error.message });
-    }
-    // check if product exists
-    if (!results.rows.length) {
-      return res
-        .status(404)
-        .json({ Message: "Product does not exist and cannot be deleted!" });
-    }
-
-    // If product exists delete
-    pool.query(queries.deleteProductQuery, [id], (error, results) => {
-      if (error) {
-        return res.status(500).json({ Error: error.message });
-      }
-      res.status(200).json({
-        Message: `Product with id ${id} has been deleted successfully!`,
-      });
-    });
-  });
 };
 
 const updateProduct = async (req, res) => {
@@ -134,11 +111,11 @@ const updateProduct = async (req, res) => {
 
       pool.query(
         queries.updateProductQuery,
-        [prod_name, prod_desc, price, stock, category, imageURLS, id, brand],
+        [prod_name, prod_desc, price, stock, category, imageURLS, brand, id],
         (error, results) => {
           if (error) return res.status(500).json({ error: error.message });
           res.status(201).json({
-            message: "Product added successfully",
+            message: "Product updated successfully",
             product: {
               name: prod_name,
               description: prod_desc,
@@ -154,29 +131,46 @@ const updateProduct = async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  });
+};
 
-    // Update product if it exists
-    // pool.query(
-    //   queries.updateProductQuery,
-    //   [prod_name, prod_desc, price, stock, category, images, id, brand],
-    //   (error, results) => {
-    //     if (error) {
-    //       return res.status(500).json({ Error: error.message });
-    //     }
-    //     res.status(201).json({
-    //       Message: "Product updated successfully",
-    //       product: {
-    //         name: prod_name,
-    //         description: prod_desc,
-    //         price: price,
-    //         stock: stock,
-    //         category: JSON.parse(category),
-    //         images: JSON.parse(images),
-    //         brand: brand,
-    //       },
-    //     });
-    //   }
-    // );
+const deleteProduct = (req, res) => {
+  const id = parseInt(req.params.id);
+  console.log(req.params);
+
+  pool.query(queries.getProductById, [id], (error, results) => {
+    if (error) {
+      return res.status(500).json({ Error: error.message });
+    }
+    // check if product exists
+    if (!results.rows.length) {
+      return res
+        .status(404)
+        .json({ Message: "Product does not exist and cannot be deleted!" });
+    }
+
+    // Delete images from cloudinary
+    const cloudinaryImages = results.rows[0].images;
+    console.log(cloudinaryImages);
+    try {
+      cloudinaryImages.forEach((image) => {
+        const public_id = image.public_id;
+        console.log(public_id);
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    // If product exists delete
+    pool.query(queries.deleteProductQuery, [id], (error, results) => {
+      if (error) {
+        return res.status(500).json({ Error: error.message });
+      }
+
+      res.status(200).json({
+        Message: `Product with id ${id} has been deleted successfully!`,
+      });
+    });
   });
 };
 
