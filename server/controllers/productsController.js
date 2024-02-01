@@ -1,6 +1,6 @@
 const pool = require("../config/DB");
 const queries = require("../queries/Queries");
-// const cloudinary = require("../config/Cloudinary");
+const cloudinary = require("../config/Cloudinary");
 
 const getProducts = (req, res) => {
   pool.query(queries.getProductsQuery, (error, results) => {
@@ -23,42 +23,54 @@ const getProductById = (req, res) => {
   });
 };
 
-const postProducts = (req, res) => {
+const postProducts = async (req, res) => {
   const { prod_name, prod_desc, price, stock, category, brand } = req.body;
   const images = req.files;
 
-  if (!req.files) {
-    return res.status(500).json({ Error: "Images are required" });
-  }
-
-  pool.query(
-    queries.postProductQuery,
-    [prod_name, prod_desc, price, stock, category, images, brand],
-    (error, results) => {
-      if (error) return res.status(500).json({ error: error.message });
-      res.status(201).json({
-        message: "Product added successfully",
-        product: {
-          name: prod_name,
-          description: prod_desc,
-          price: price,
-          stock: stock,
-          category: category,
-          images: images.map((image) => image.path),
-          brand: brand,
-        },
-      });
+  try {
+    // Check if images are present in the request
+    if (!images || images.length === 0) {
+      return res.status(500).json({ Error: "Images are required" });
     }
-  );
+
+    // Upload images to Cloudinary
+    const uploadPromises = images.map((image) => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(image.path, (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result.secure_url);
+          }
+        });
+      });
+    });
+
+    const imageURLS = await Promise.all(uploadPromises);
+
+    pool.query(
+      queries.postProductQuery,
+      [prod_name, prod_desc, price, stock, category, imageURLS, brand],
+      (error, results) => {
+        if (error) return res.status(500).json({ error: error.message });
+        res.status(201).json({
+          message: "Product added successfully",
+          product: {
+            name: prod_name,
+            description: prod_desc,
+            price: price,
+            stock: stock,
+            category: category,
+            images: imageURLS,
+            brand: brand,
+          },
+        });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
-
-
-
-module.exports = {
-  postProducts,
-};
-
-
 
 const deleteProduct = (req, res) => {
   const id = parseInt(req.params.id);
@@ -85,17 +97,18 @@ const deleteProduct = (req, res) => {
   });
 };
 
-const updateProduct = (req, res) => {
+const updateProduct = async (req, res) => {
   const { prod_name, prod_desc, price, stock, category, brand } = req.body;
+  const id = parseInt(req.params.id);
   const images = req.files;
 
-  if (!req.files) {
+  // Check if images exist
+  if (!images || images.length === 0) {
     return res.status(500).json({ Error: "Images are required" });
   }
-  const id = parseInt(req.params.id);
 
   // Check if product exists before updating
-  pool.query(queries.getProductById, [id], (error, results) => {
+  pool.query(queries.getProductById, [id], async (error, results) => {
     if (error) {
       return res.status(500).json({ Error: error.message });
     }
@@ -103,28 +116,67 @@ const updateProduct = (req, res) => {
       return res.status(404).json({ Message: "Product does not exist" });
     }
 
-    // Update product if it exists
-    pool.query(
-      queries.updateProductQuery,
-      [prod_name, prod_desc, price, stock, category, images, id, brand],
-      (error, results) => {
-        if (error) {
-          return res.status(500).json({ Error: error.message });
-        }
-        res.status(201).json({
-          Message: "Product updated successfully",
-          product: {
-            name: prod_name,
-            description: prod_desc,
-            price: price,
-            stock: stock,
-            category: JSON.parse(category),
-            images: JSON.parse(images),
-            brand: brand,
-          },
+    try {
+      // Upload images to Cloudinary
+      const uploadPromises = images.map((image) => {
+        return new Promise((resolve, reject) => {
+          cloudinary.uploader.upload(image.path, (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result.secure_url);
+            }
+          });
         });
-      }
-    );
+      });
+
+      const imageURLS = await Promise.all(uploadPromises);
+
+      pool.query(
+        queries.updateProductQuery,
+        [prod_name, prod_desc, price, stock, category, imageURLS, id, brand],
+        (error, results) => {
+          if (error) return res.status(500).json({ error: error.message });
+          res.status(201).json({
+            message: "Product added successfully",
+            product: {
+              name: prod_name,
+              description: prod_desc,
+              price: price,
+              stock: stock,
+              category: category,
+              images: imageURLS,
+              brand: brand,
+            },
+          });
+        }
+      );
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+
+    // Update product if it exists
+    // pool.query(
+    //   queries.updateProductQuery,
+    //   [prod_name, prod_desc, price, stock, category, images, id, brand],
+    //   (error, results) => {
+    //     if (error) {
+    //       return res.status(500).json({ Error: error.message });
+    //     }
+    //     res.status(201).json({
+    //       Message: "Product updated successfully",
+    //       product: {
+    //         name: prod_name,
+    //         description: prod_desc,
+    //         price: price,
+    //         stock: stock,
+    //         category: JSON.parse(category),
+    //         images: JSON.parse(images),
+    //         brand: brand,
+    //       },
+    //     });
+    //   }
+    // );
   });
 };
 
