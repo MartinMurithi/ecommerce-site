@@ -1,5 +1,6 @@
 const pool = require("../config/DB");
 const queries = require("../queries/Queries");
+// const cloudinary = require("../config/Cloudinary");
 
 const getProducts = (req, res) => {
   pool.query(queries.getProductsQuery, (error, results) => {
@@ -23,7 +24,7 @@ const getProductById = (req, res) => {
 };
 
 const postProducts = (req, res) => {
-  const { prod_name, prod_desc, price, stock, category } = req.body;
+  const { prod_name, prod_desc, price, stock, category, brand } = req.body;
   const images = req.files;
 
   if (!req.files) {
@@ -32,7 +33,7 @@ const postProducts = (req, res) => {
 
   pool.query(
     queries.postProductQuery,
-    [prod_name, prod_desc, price, stock, category, images],
+    [prod_name, prod_desc, price, stock, category, images, brand],
     (error, results) => {
       if (error) return res.status(500).json({ error: error.message });
       res.status(201).json({
@@ -43,12 +44,21 @@ const postProducts = (req, res) => {
           price: price,
           stock: stock,
           category: category,
-          images: images.map((image) => ({ path: image.path })),
+          images: images.map((image) => image.path),
+          brand: brand,
         },
       });
     }
   );
 };
+
+
+
+module.exports = {
+  postProducts,
+};
+
+
 
 const deleteProduct = (req, res) => {
   const id = parseInt(req.params.id);
@@ -76,7 +86,7 @@ const deleteProduct = (req, res) => {
 };
 
 const updateProduct = (req, res) => {
-  const { prod_name, prod_desc, price, stock, category } = req.body;
+  const { prod_name, prod_desc, price, stock, category, brand } = req.body;
   const images = req.files;
 
   if (!req.files) {
@@ -96,7 +106,7 @@ const updateProduct = (req, res) => {
     // Update product if it exists
     pool.query(
       queries.updateProductQuery,
-      [prod_name, prod_desc, price, stock, category, images, id],
+      [prod_name, prod_desc, price, stock, category, images, id, brand],
       (error, results) => {
         if (error) {
           return res.status(500).json({ Error: error.message });
@@ -108,8 +118,9 @@ const updateProduct = (req, res) => {
             description: prod_desc,
             price: price,
             stock: stock,
-            category: category,
-            images: images.map((image)=>({path: image.path})),
+            category: JSON.parse(category),
+            images: JSON.parse(images),
+            brand: brand,
           },
         });
       }
