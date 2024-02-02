@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const ApiSlice = createApi({
   reducerPath: "productsApi",
@@ -25,7 +25,7 @@ export const ApiSlice = createApi({
     }),
     updateProduct: builder.mutation({
       query: ({ id, ...product }) => ({
-        url: `update-product${id}`,
+        url: `update-product/${id}`,
         method: "PUT",
         body: product,
       }),
@@ -33,7 +33,7 @@ export const ApiSlice = createApi({
     }),
     deleteProduct: builder.mutation({
       query: (id) => ({
-        url: `delete-product${id}`,
+        url: `delete-product/${id}`,
         method: "DELETE",
         body: id,
       }),

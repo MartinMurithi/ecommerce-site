@@ -2,213 +2,26 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./ProductCard.css";
 
-function ProductCard() {
+function ProductCard({ product }) {
+  // N/B => Slice, returns a shallow copy of an arrow and does not affect the original array.
+
   return (
-    <div className="productList">
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/cameras-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/babies-category.jpeg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/beauty-category.jpeg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/computers-category.jpeg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/sports-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/watches-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/sneakers-category.jpeg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/cameras-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/cameras-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/cameras-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/cameras-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-
-      <section className="productCard">
-        <NavLink>
-          <img
-            src="/assets/cameras-category.jpg"
-            alt=""
-            width="280px"
-            height="280px"
-            className="prodImg"
-          />
-          <div className="cardDetails">
-            <p className="cardCategory">Accessory</p>
-            <p className="cardTitle">Camera</p>
-            <h5 className="cardPrice">Ksh.89.00</h5>
-          </div>
-        </NavLink>{" "}
-      </section>
-    </div>
+    <section className="productCard">
+      <NavLink>
+        <img
+          src={product?.images?.[0]}
+          alt="Product"
+          width="280px"
+          height="280px"
+          className="prodImg"
+        />
+        <div className="cardDetails">
+          <p className="cardCategory">{product?.category?.[0]}</p>
+          <p className="cardTitle">{product.prod_name}</p>
+          <h5 className="cardPrice">{product.price}</h5>
+        </div>
+      </NavLink>
+    </section>
   );
 }
 
