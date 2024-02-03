@@ -1,13 +1,17 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./ProductCard.css";
+import { useGetProductByIdQuery } from "../../api/ApiSlice";
 
 function ProductCard({ product }) {
   // N/B => Slice, returns a shallow copy of an arrow and does not affect the original array.
-
+  let id = product.pid;
+  console.log(id);
+  const { isLoading, isError, error, data:productt } = useGetProductByIdQuery(id);
+  // console.log(product);
   return (
     <section className="productCard">
-      <NavLink>
+      <Link to={`/productPage/${id}`}>
         <img
           src={product?.images?.[0]}
           alt="Product"
@@ -20,7 +24,7 @@ function ProductCard({ product }) {
           <p className="cardTitle">{product.prod_name}</p>
           <h5 className="cardPrice">{product.price}</h5>
         </div>
-      </NavLink>
+      </Link>
     </section>
   );
 }

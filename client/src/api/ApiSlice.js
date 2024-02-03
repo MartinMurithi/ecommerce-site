@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const ApiSlice = createApi({
   reducerPath: "productsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/ammazonne/api/v1/",
+    baseUrl: "http://localhost:4100/ammazonne/api/v1/",
   }),
   tagTypes: ["Products"],
   endpoints: (builder) => ({
