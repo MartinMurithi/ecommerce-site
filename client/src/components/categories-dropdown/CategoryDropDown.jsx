@@ -1,42 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CategoryDropDown.css";
 function CategoryDropDown() {
+  
+  const prodCategories = [
+    { value: "", text: "--Select a product category--" },
+    { value: "Accessories", text: "Accessories" },
+    { value: "Babies", text: "Babies" },
+    { value: "Beauty", text: "Beauty" },
+    { value: "Decorations", text: "Decorations" },
+    { value: "Electronics", text: "Electronics" },
+    { value: "Fashion", text: "Fashion" },
+    { value: "Food", text: "Food" },
+    { value: "Furniture", text: "Furniture" },
+    { value: "Watches", text: "Furniture" },
+    { value: "Computers", text: "Computer" },
+  ];
+
+  const [prodCategory, setProdCategory] = useState("");
+
+  const handleValue = (event) => {
+    const selectedCategory = event.target.value;
+    setProdCategory(selectedCategory);
+  };
+  console.log(prodCategory);
   return (
     <div className="dropDownCategories">
-      <select name="categories" id="categories" className="categories">
-        <option value="all" className="categoryOption">
-          All Categories
-        </option>
-        <option value="accessories" className="categoryOption">
-          Accessories
-        </option>
-        <option value="babies" className="categoryOption">
-          Babies
-        </option>
-        <option value="beauty" className="categoryOption">
-          Beauty
-        </option>
-        <option value="decoration" className="categoryOption">
-          Decoration
-        </option>
-        <option value="electronics" className="categoryOption">
-          Electronics
-        </option>
-        <option value="fashion" className="categoryOption">
-          Fashion
-        </option>
-        <option value="food" className="categoryOption">
-          Food
-        </option>
-        <option value="furniture" className="categoryOption">
-          Furniture
-        </option>
-        <option value="watches" className="categoryOption">
-          Watches
-        </option>
-        <option value="computer" className="categoryOption">
-          Computer
-        </option>
+      <select
+        name="categories"
+        onChange={handleValue}
+        id="categories"
+        className="categories"
+      >
+        {prodCategories?.map((category) => (
+          <option key={category.value} value={category.value}>
+            {category.text}
+          </option>
+        ))}
       </select>
     </div>
   );
