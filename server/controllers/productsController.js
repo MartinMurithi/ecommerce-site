@@ -11,8 +11,6 @@ const getProducts = (req, res) => {
 
 const getProductById = (req, res) => {
   const id = parseInt(req.params.id);
-  console.log(req.params);
-  console.log(id);
   pool.query(queries.getProductById, [id], (error, results) => {
     // Check if product exists
     if (!results?.rows?.length) {
@@ -20,9 +18,23 @@ const getProductById = (req, res) => {
     } else if (error) {
       return res.status(500).json({ Error: error.message });
     } else {
-      return res.status(200).json(results.rows);
+      return res.status(200).json(results.rows?.[0]);
     }
   });
+};
+
+const getProductsByCategory = (req, res) => {
+  const category = req.params.category;
+  console.log(req.params);
+
+  pool.query(
+    queries.getProductsByCategoryQuery,
+    [category],
+    (error, results) => {
+      if (error) return res.status(500).json({ Error: error.message });
+      return res.status(200).json(results.rows);
+    }
+  );
 };
 
 const postProducts = async (req, res) => {
@@ -188,6 +200,7 @@ const deleteAllProducts = (req, res) => {
 module.exports = {
   getProducts,
   getProductById,
+  getProductsByCategory,
   postProducts,
   deleteProduct,
   updateProduct,

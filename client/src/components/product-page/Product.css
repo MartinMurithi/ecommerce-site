@@ -20,6 +20,7 @@
 }
 
 .mainImg img {
+  width: 100%;
   max-width: 100%; 
   height: auto;
   object-fit: cover;
@@ -36,7 +37,7 @@
 
 .moreImages img {
   max-width: 60px; 
-  height: auto;
+  height: 60px;
   margin-right: 10px; 
   cursor: pointer;
 }

@@ -2,11 +2,11 @@ import React from "react";
 import Navbar from "../components/navbar/Navbar";
 import Banner from "../components/banner/Banner";
 import Categories from "../components/home-categories/Categories";
-import Sort from "../components/sort-products/Sort";
 import LoadMore from "../components/load-more-btn/LoadMore";
 import Subscription from "../components/subscription/Subscription";
 import Footer from "../components/footer/Footer";
 import ProductList from "../components/ProductList";
+import SortProductsSection from "../components/sort-products-section/SortProductsSection";
 
 function Home() {
   return (
@@ -14,7 +14,7 @@ function Home() {
       <Navbar />
       <Banner />
       <Categories />
-      <Sort />
+      <SortProductsSection />
       <ProductList />
       <LoadMore />
       <Subscription />

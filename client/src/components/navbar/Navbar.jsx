@@ -5,7 +5,6 @@ import {
   MdOutlineShoppingCart,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
-
 import "./Navbar.css";
 
 function Navbar() {
@@ -18,21 +17,7 @@ function Navbar() {
 
         <div className="searchBarParent">
           <div className="categoriesDropdown">
-            <select name="categories" id="navCategories">
-              <option value="all">All Categories</option>
-              <option value="accessories">Accessories</option>
-              <option value="babies">Babies</option>
-              <option value="beauty">Beauty</option>
-              <option value="decoration">Decoration</option>
-              <option value="electronics">Electronics</option>
-              <option value="fashion">Fashion</option>
-              <option value="food">Food</option>
-              <option value="furniture">Furniture</option>
-              <option value="watches">Watches</option>
-              <option value="computer">Computer</option>
-            </select>
           </div>
-          <hr />
           <div className="searchInputSection">
             <input
               type="search"
