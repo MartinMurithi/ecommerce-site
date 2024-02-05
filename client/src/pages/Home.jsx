@@ -14,7 +14,7 @@ function Home() {
       <Navbar />
       <Banner />
       <Categories />
-      <SortProductsSection />
+      {/* <SortProductsSection /> */}
       <ProductList />
       <LoadMore />
       <Subscription />
