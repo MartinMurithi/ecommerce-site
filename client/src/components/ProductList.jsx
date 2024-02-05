@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { useGetProductsQuery, useLazyGetProductsByCategoryQuery } from "../api/ApiSlice";
+import {
+  useGetProductsQuery,
+  useGetProductsByCategoryQuery,
+} from "../api/ApiSlice";
 import "./product-card/ProductCard.css";
 import ProductCard from "./product-card/ProductCard";
 import "./sort-products-section/SortProductsSection.css";
@@ -7,8 +10,10 @@ import CategoryDropDown from "./categories-dropdown/CategoryDropDown";
 import Sort from "./sort-products/Sort";
 
 function ProductList() {
+  // These are the options displayed in the dropdown
   const prodCategories = [
     { value: "", text: "--Select a product category--" },
+    { value: "All", text: "All" },
     { value: "Accessories", text: "Accessories" },
     { value: "Babies", text: "Babies" },
     { value: "Beauty", text: "Beauty" },
@@ -21,31 +26,40 @@ function ProductList() {
     { value: "Computers", text: "Computer" },
   ];
 
-  const [prodCategory, setProdCategory] = useState("");
-
   const { isLoading, isError, error, data: products } = useGetProductsQuery();
-  const { data:productts } = useLazyGetProductsByCategoryQuery(prodCategory);
-  console.log(products);
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
-  const handleValue = (event) => {
-    const selectedCategory = event.target.value;
-    setProdCategory(selectedCategory);
+  const filterProducts = (selectedCategory) => {
+    if (selectedCategory === "All") {
+      setFilteredProducts(products); // Show all products
+    } else {
+      const newProducts = products.filter(
+        (product) =>
+          product?.category.toLowerCase() === selectedCategory.toLowerCase()
+      );
+      setFilteredProducts(newProducts);
+    }
   };
-  console.log(prodCategory);
+
+  const sortProducts = (sortOption)=>{
+    
+  }
 
   return (
     <>
       <div className="sortProductsSection">
-        <CategoryDropDown categoryList={prodCategories} handleValue={handleValue} />
+        <CategoryDropDown
+          categoryList={prodCategories}
+          handleValue={(e) => filterProducts(e.target.value)}
+        />
         <Sort />
       </div>
-      {/* <SortProductsSection /> */}
       <div className="errorSection">{isError && <p>{error.message}</p>}</div>
 
       <div className="loadingSpinner">{isLoading && <p>Loading....</p>}</div>
       <div className="productList">
-        {products?.length !== 0 ? (
-          products?.map((product) => {
+        {filteredProducts?.length !== 0 ? (
+          filteredProducts?.map((product) => {
             return <ProductCard product={product} key={product.pId} />;
           })
         ) : (

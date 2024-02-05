@@ -15,10 +15,6 @@ export const ApiSlice = createApi({
       query: (id) => `products/${id}`,
       providesTags: ["Products"],
     }),
-    getProductsByCategory: builder.query({
-      query: (category) => `product-category/${category}`,
-      providesTags: ["Products"],
-    }),
     addProduct: builder.mutation({
       query: (product) => ({
         url: "add-product",
@@ -49,7 +45,6 @@ export const ApiSlice = createApi({
 export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
-  useLazyGetProductsByCategoryQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
