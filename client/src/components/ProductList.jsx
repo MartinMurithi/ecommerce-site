@@ -8,6 +8,7 @@ import ProductCard from "./product-card/ProductCard";
 import "./sort-products-section/SortProductsSection.css";
 import CategoryDropDown from "./categories-dropdown/CategoryDropDown";
 import Sort from "./sort-products/Sort";
+import { useEffect } from "react";
 
 function ProductList() {
   // These are the options displayed in the dropdown
@@ -22,12 +23,18 @@ function ProductList() {
     { value: "Fashion", text: "Fashion" },
     { value: "Food", text: "Food" },
     { value: "Furniture", text: "Furniture" },
-    { value: "Watches", text: "Furniture" },
+    { value: "Watches", text: "Watches" },
     { value: "Computers", text: "Computer" },
   ];
 
   const { isLoading, isError, error, data: products } = useGetProductsQuery();
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  useEffect(() => {
+    if (products) {
+      setFilteredProducts(products);
+    }
+  }, [products]);
 
   const filterProducts = (selectedCategory) => {
     if (selectedCategory === "All") {
@@ -41,9 +48,14 @@ function ProductList() {
     }
   };
 
-  const sortProducts = (sortOption)=>{
-    
-  }
+  const sortProducts = (sortOption) => {
+    if (sortOption === "default") {
+      setFilteredProducts(products);
+    } else {
+      const sortedProducts = products.sort((a, b) => a.price - b.price);
+      setFilteredProducts(sortedProducts);
+    }
+  };
 
   return (
     <>
@@ -52,7 +64,7 @@ function ProductList() {
           categoryList={prodCategories}
           handleValue={(e) => filterProducts(e.target.value)}
         />
-        <Sort />
+        <Sort handleValue={(e)=> sortProducts(e.target.value)} />
       </div>
       <div className="errorSection">{isError && <p>{error.message}</p>}</div>
 
@@ -60,7 +72,11 @@ function ProductList() {
       <div className="productList">
         {filteredProducts?.length !== 0 ? (
           filteredProducts?.map((product) => {
-            return <ProductCard product={product} key={product.pId} />;
+            return (
+              <div key={product.pId}>
+                <ProductCard product={product} />
+              </div>
+            );
           })
         ) : (
           <p>No products available at the moment</p>
