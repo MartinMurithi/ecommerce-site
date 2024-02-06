@@ -23,20 +23,6 @@ const getProductById = (req, res) => {
   });
 };
 
-const getProductsByCategory = (req, res) => {
-  const category = req.params.category;
-  console.log(req.params);
-
-  pool.query(
-    queries.getProductsByCategoryQuery,
-    [category],
-    (error, results) => {
-      if (error) return res.status(500).json({ Error: error.message });
-      return res.status(200).json(results.rows);
-    }
-  );
-};
-
 const postProducts = async (req, res) => {
   const { prod_name, prod_desc, price, stock, category, brand } = req.body;
   const images = req.files;
@@ -200,7 +186,6 @@ const deleteAllProducts = (req, res) => {
 module.exports = {
   getProducts,
   getProductById,
-  getProductsByCategory,
   postProducts,
   deleteProduct,
   updateProduct,
