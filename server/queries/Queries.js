@@ -13,7 +13,6 @@ const deleteAllProductsQuery = "DELETE FROM products";
 module.exports = {
   getProductsQuery,
   getProductById,
-  getProductsByCategoryQuery,
   postProductQuery,
   deleteProductQuery,
   updateProductQuery,

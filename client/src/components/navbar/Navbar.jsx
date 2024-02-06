@@ -16,8 +16,7 @@ function Navbar() {
         </NavLink>
 
         <div className="searchBarParent">
-          <div className="categoriesDropdown">
-          </div>
+          <div className="categoriesDropdown"></div>
           <div className="searchInputSection">
             <input
               type="search"
@@ -41,22 +40,18 @@ function Navbar() {
           </div>
 
           {/* Shopping Cart */}
-          <div className="navCart">
-            <MdOutlineShoppingCart className="cartIcon" />
-            <NavLink to='/cart' className="cartText">Cart</NavLink>
-          </div>
+          <NavLink to="/cart" className="navCart cartText">
+            <MdOutlineShoppingCart className="cartIcon" /> Cart
+          </NavLink>
+
           {/* User account */}
-          <div className="navAccount">
+          <NavLink to="/login" className="navAccount accountText">
             <MdOutlineAccountCircle className="accountIcon" />
             {/* When user clicks this, it takes him/her to a login page */}
-            <NavLink to="/login" className="accountText">
-              My Account
-            </NavLink>
-
+            My Account
             {/* <NavLink to="/register" className="accountText">
-              Register
-            </NavLink> */}
-          </div>
+              Register */}
+          </NavLink>
         </div>
       </div>
     </nav>
