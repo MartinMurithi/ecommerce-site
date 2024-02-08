@@ -1,32 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CartSection.css";
 import "../product-page/Product.css";
 
-// function CartSection() {
-//   return (
-//     <div className="cartSection">
-//       <h2 className="cartTitle">My Cart</h2>
-
-//       <div className="cartCard">
-//         <div className="imgProduct">
-//           <img src="./assets/babies-category.jpeg" alt="" />
-//         </div>
-
-//         <div className="productCartDetails">
-//           <p className="prodCartTitle">Product Name</p>
-//           <div className="quantity">
-//             <button className="quantityBtn">-</button>
-//             <span className="prodCount">1</span>
-//             <button className="quantityBtn">+</button>
-//           </div>
-//           <p className="prodCartPrice">12,432</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 function CartSection() {
+    const [cartValue, setCartValue] = useState(1);
+
+    const addCartValue = ()=>{
+        setCartValue((value)=> value + 1);
+    };
+
+
+    const subtractCartValue = () => {
+      setCartValue((value) => value - 1);
+      if (cartValue <= 1){
+        setCartValue(1);
+      }
+    };
+
   return (
     <div className="cartSection">
       <h2 className="cartTitle">My Cart</h2>
@@ -38,9 +28,9 @@ function CartSection() {
           <div className="productDetails">
             <p className="productName">Product Name</p>
             <div className="quantityControl">
-              <button className="quantityBtn">-</button>
-              <span className="quantity">1</span>
-              <button className="quantityBtn">+</button>
+              <button className="quantityBtn" onClick={subtractCartValue}>-</button>
+              <span className="quantity">{cartValue}</span>
+              <button className="quantityBtn" onClick={addCartValue}>+</button>
             </div>
             <p className="productPrice">$12,432</p>
           </div>

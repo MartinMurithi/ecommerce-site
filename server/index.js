@@ -3,14 +3,16 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
-const router = require("./routes/productRoute");
+const prodRouter = require("./routes/productRoute");
+const cartRouter = require('./routes/CartRoute');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json())
 app.use(cors());
-app.use("/ammazonne/api/v1", router);
+app.use("/ammazonne/api/v1", prodRouter);
+app.use("/ammazonne/api/v1", cartRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.all("*", (req, res) => {

@@ -1,5 +1,5 @@
 const pool = require("../config/DB");
-const queries = require("../queries/Queries");
+const queries = require("../queries/ProductsQueries");
 const cloudinary = require("../config/Cloudinary");
 
 const getProducts = (req, res) => {
