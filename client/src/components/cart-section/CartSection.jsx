@@ -1,49 +1,40 @@
-import React, { useState } from "react";
-import { useGetCartProductsQuery } from "../../api/ApiSlice";
+import React from "react";
+import { Link } from "react-router-dom";
 import "./CartSection.css";
 import "../product-page/Product.css";
 
-function CartSection({prodCart}) {
-    const [cartValue, setCartValue] = useState(1);
-
-    const addCartValue = ()=>{
-        setCartValue((value)=> value + 1);
-    };
-
-
-    const subtractCartValue = () => {
-      setCartValue((value) => value - 1);
-      if (cartValue <= 1){
-        setCartValue(1);
-      }
-    };
+function CartSection({ prodCart }) {
+  // Remove currency symbol (£) and comma from the price string, then convert it to a number
+  const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
+  const subTotalAmt = price * prodCart?.qty;
 
   return (
     <div className="cartSection">
       <div className="cartContainer">
-        <div className="cartItem">
-          <div className="productImage">
-            <img src={prodCart?.images[0]} alt="Product" />
-          </div>
-          <div className="productDetails">
-            <p className="productName">{prodCart?.prod_name}</p>
-            <div className="quantityControl">
-              <button className="quantityBtn" onClick={subtractCartValue}>-</button>
-              <span className="quantity">{prodCart?.qty}</span>
-              <button className="quantityBtn" onClick={addCartValue}>+</button>
+        <Link to={`/products/${prodCart?.pid}`} className="cartCardLink">
+          <div className="cartItem">
+            <div className="productImage">
+              <img src={prodCart?.images[0]} alt="Product" />
             </div>
-            <p className="productPrice">{prodCart?.price}</p>
+            <div className="productDetails">
+              <p className="productName">{prodCart?.prod_name}</p>
+              <div className="quantityControl">
+                <p className="productName">Quantity : </p>
+                <span className="quantity">{prodCart?.qty} Items</span>
+              </div>
+              <p className="productPrice">Price : {prodCart?.price}</p>
+            </div>
           </div>
-        </div>
-        <hr />
+          <hr />
 
-        <div className="subtotal">
-          <p className="subtotalText">Subtotal:</p>
-          <p className="subtotalAmount">{prodCart?.price * prodCart?.qty}</p>
-        </div>
-        <div className="deleteBtnSection">
-          <button className="deleteBtn">Delete</button>
-        </div>
+          <div className="subtotal">
+            <p className="subtotalText">Subtotal:</p>
+            <p className="subtotalAmount">£{subTotalAmt.toLocaleString()}</p>
+          </div>
+          <div className="deleteBtnSection">
+            <button className="deleteBtn">Delete</button>
+          </div>
+        </Link>
       </div>
     </div>
   );

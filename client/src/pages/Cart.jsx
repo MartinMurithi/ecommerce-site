@@ -22,7 +22,7 @@ function Cart() {
         products?.length !== 0 &&
         products?.products?.map((product) => {
           return (
-            <div key={product.pid}>
+            <div key={product.pid} className="cart">
               <CartSection prodCart={product} />
             </div>
           );
