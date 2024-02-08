@@ -18,14 +18,16 @@
 }
 
 .cartItem {
+  
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
 
 .productImage img {
-  width: 70%;
-  max-width: 70%;
+  width: 150px;
+  height: 150px;
+  /* max-width: 40%; */
   border-radius: 2px;
   margin-right: 20px;
 }

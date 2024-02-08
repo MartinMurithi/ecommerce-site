@@ -39,6 +39,10 @@ export const ApiSlice = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
+    getCartProducts: builder.query({
+      query: ()=> 'cart',
+      providesTags: ['Products']
+    }),
   }),
 });
 
@@ -48,4 +52,5 @@ export const {
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetCartProductsQuery,
 } = ApiSlice;

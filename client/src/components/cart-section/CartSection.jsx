@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useGetCartProductsQuery } from "../../api/ApiSlice";
 import "./CartSection.css";
 import "../product-page/Product.css";
 
-function CartSection() {
+function CartSection({prodCart}) {
     const [cartValue, setCartValue] = useState(1);
 
     const addCartValue = ()=>{
@@ -19,27 +20,26 @@ function CartSection() {
 
   return (
     <div className="cartSection">
-      <h2 className="cartTitle">My Cart</h2>
       <div className="cartContainer">
         <div className="cartItem">
           <div className="productImage">
-            <img src="./assets/babies-category.jpeg" alt="Product" />
+            <img src={prodCart?.images[0]} alt="Product" />
           </div>
           <div className="productDetails">
-            <p className="productName">Product Name</p>
+            <p className="productName">{prodCart?.prod_name}</p>
             <div className="quantityControl">
               <button className="quantityBtn" onClick={subtractCartValue}>-</button>
-              <span className="quantity">{cartValue}</span>
+              <span className="quantity">{prodCart?.qty}</span>
               <button className="quantityBtn" onClick={addCartValue}>+</button>
             </div>
-            <p className="productPrice">$12,432</p>
+            <p className="productPrice">{prodCart?.price}</p>
           </div>
         </div>
         <hr />
 
         <div className="subtotal">
           <p className="subtotalText">Subtotal:</p>
-          <p className="subtotalAmount">$12,432</p>
+          <p className="subtotalAmount">{prodCart?.price * prodCart?.qty}</p>
         </div>
         <div className="deleteBtnSection">
           <button className="deleteBtn">Delete</button>
