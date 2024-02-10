@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "./CartSection.css";
 import "../product-page/Product.css";
 import {
@@ -11,6 +10,7 @@ function CartSection({ prodCart }) {
   const [qtyValue, setQtyValue] = useState(prodCart?.qty);
   const [deleteCartProductHandler, { isLoading }] = useRemoveFromCartMutation();
   const [qtyControlHandler] = useUpdateCartQtyMutation();
+
 
   // Func to increase or decrease qty
   const updateCartQty = async (newQtyValue) => {
@@ -61,7 +61,6 @@ function CartSection({ prodCart }) {
   return (
     <div className="cartSection">
       <div className="cartContainer">
-        {/* <Link to={`/products/${prodCart?.pid}`} className="cartCardLink"> */}
         <div className="cartItem">
           <div className="productImage">
             <img src={prodCart?.images[0]} alt="Product" />
@@ -84,7 +83,6 @@ function CartSection({ prodCart }) {
             <p className="productPrice">Price Per Item : {prodCart?.price}</p>
           </div>
         </div>
-        {/* </Link> */}
         <hr />
 
         <div className="subtotal">

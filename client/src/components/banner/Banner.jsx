@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { MdArrowRightAlt } from "react-icons/md";
 import "./Banner.css";
 function Banner() {

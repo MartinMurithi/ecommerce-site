@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import toast from "react-hot-toast";
 import Navbar from "../navbar/Navbar";
 import {
   useGetProductByIdQuery,
@@ -18,6 +19,7 @@ function Product() {
     data: product,
   } = useGetProductByIdQuery(id);
   const [addToCartHandler] = useAddToCartMutation();
+
 
   // Increament cart value
   const increaseCartVal = () => {
@@ -51,8 +53,10 @@ function Product() {
     e.preventDefault();
     try {
       await cartProductProps();
+      toast.success("Product added to cart");
     } catch (err) {
       console.error(err.message);
+      toast.error("An error occured when adding product to cart.");
     }
   };
 

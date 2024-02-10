@@ -88,14 +88,24 @@ hr {
   align-items: center;
 }
 
-.subtotalText {
+.subtotalText,
+.totalAmtText {
   font-size: 1.1rem;
   font-weight: bold;
 }
 
-.subtotalAmount {
+.subtotalAmount,
+.totalAmt {
   font-size: 1.1rem;
   font-weight: bold;
+}
+
+.totalAmt {
+  width: 45%;
+  margin: 10px auto 50px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .checkoutBtn {
