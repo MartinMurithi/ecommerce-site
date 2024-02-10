@@ -45,9 +45,26 @@ export const ApiSlice = createApi({
     }),
     addToCart: builder.mutation({
       query: (cartProd) => ({
-        url: 'add-to-cart',
+        url: "add-to-cart",
         method: "POST",
         body: cartProd,
+      }),
+      invalidatesTags: ["Products"],
+    }),
+
+    updateCartQty: builder.mutation({
+      query: ({ id, ...qty }) => ({
+        url: `update-cart-product/${id}`,
+        method: "PUT",
+        body: qty,
+      }),
+      invalidatesTags: ["Products"],
+    }),
+    removeFromCart: builder.mutation({
+      query: (id) => ({
+        url: `delete-from-cart/${id}`,
+        method: "DELETE",
+        body: id,
       }),
       invalidatesTags: ["Products"],
     }),
@@ -62,4 +79,6 @@ export const {
   useDeleteProductMutation,
   useGetCartProductsQuery,
   useAddToCartMutation,
+  useUpdateCartQtyMutation,
+  useRemoveFromCartMutation,
 } = ApiSlice;

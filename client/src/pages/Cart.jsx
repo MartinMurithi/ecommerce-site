@@ -11,7 +11,6 @@ function Cart() {
     error,
     data: products,
   } = useGetCartProductsQuery();
-  console.log(products);
   return (
     <>
       <Navbar />

@@ -33,25 +33,60 @@ const addToCart = (req, res) => {
 
 const deleteProdCart = (req, res) => {
   const id = parseInt(req.params.id);
+
   // Check if the product exists in the cart before deleting
-  pool.query(queries.getCartProductById, [id], (error, results) => {
+  // pool.query(queries.getCartProductById, [id], (error, results) => {
+  //   if (error) {
+  //     return res.status(500).json({ Error: error.message });
+  //   } else if (!results.rows.length) {
+  //     return res
+  //       .status(200)
+  //       .json({ Message: `Product with ${id} does not exist` });
+  //   }
+
+  //   // Delete product from cart if it exists
+  // });
+  pool.query(queries.deleteProdCartQuery, [id], (error, results) => {
     if (error) {
       return res.status(500).json({ Error: error.message });
-    } else if (!results.rows.length) {
-      return res
-        .status(200)
-        .json({ Message: `Product with ${id} does not exist` });
     }
 
-    // Delete product from cart if it exists
-    pool.query(queries.deleteProdCartQuery, [id], (error, results) => {
+    return res.status(200).json({ Message: "Product removed from cart" });
+  });
+};
+
+const updateProdCart = (req, res) => {
+  const qty = req.body.qty;
+  const id = parseInt(req.params.id);
+
+    console.log(req.body);
+    console.log(req.params);
+
+  // Check if the prod exists
+  pool.query(queries.getCartProductById, [id], (error, results) => {
+    if (error) {
+      return res.status(200).json({ Message: error.message });
+    } else if (!results.rows.length) {
+      return res
+        .status(404)
+        .json({ Message: `Product with id ${id} does not ;exist` });
+    }
+
+    // If prod exists in the cart, update it
+    pool.query(queries.updateCartProductQuery, [qty, id], (error, results) => {
       if (error) {
         return res.status(500).json({ Error: error.message });
       }
 
-      return res.status(200).json({ Message: "Product removed from cart" });
+      return res.status(201).json({
+        Message: "Cart product Updated successfully",
+        product: {
+          id: id,
+          qty: qty,
+        },
+      });
     });
   });
 };
 
-module.exports = { getProductsFromCart, addToCart, deleteProdCart };
+module.exports = { getProductsFromCart, addToCart, updateProdCart, deleteProdCart };

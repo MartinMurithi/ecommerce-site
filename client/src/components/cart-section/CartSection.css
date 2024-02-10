@@ -74,6 +74,7 @@ span.quantity {
   border-radius: 3px;
   font-size: 0.9rem;
   margin: 15px 0;
+  cursor: pointer;
 }
 
 hr {
