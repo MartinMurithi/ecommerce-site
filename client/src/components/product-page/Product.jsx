@@ -9,7 +9,6 @@ import "./Product.css";
 import { useParams } from "react-router";
 
 function Product() {
-  const [isProdAddedToCart, setIsProdAddedToCart] = useState(false);
   const [qtyValue, setQtyValue] = useState(1);
   const { id } = useParams();
   const {
@@ -18,7 +17,6 @@ function Product() {
     error,
     data: product,
   } = useGetProductByIdQuery(id);
-
   const [addToCartHandler] = useAddToCartMutation();
 
   // Increament cart value
@@ -53,11 +51,11 @@ function Product() {
     e.preventDefault();
     try {
       await cartProductProps();
-      setIsProdAddedToCart(true);
     } catch (err) {
       console.error(err.message);
     }
   };
+
   const images = product?.images?.map((image) => (
     <img src={image} alt="Product" width="60px" height="60px" />
   ));
@@ -102,6 +100,7 @@ function Product() {
           <p className="prodPrice">Price : {product?.price}</p>
           <p className="prodDescription">{product?.prod_desc}</p>
           {/* Add to cart section */}
+
           <div className="addToCartSection">
             <div className="quantity">
               <button className="quantityBtn" onClick={decreamentCartVal}>
@@ -112,19 +111,9 @@ function Product() {
                 +
               </button>
             </div>
-            {isProdAddedToCart ? (
-              <button disabled className="addToCartBtn">
-                Added to Cart
-              </button>
-            ) : (
-              <button
-                type="submit"
-                onClick={addToCart}
-                className="addToCartBtn"
-              >
-                <MdOutlineShoppingCart /> Add to Cart
-              </button>
-            )}
+            <button type="submit" onClick={addToCart} className="addToCartBtn">
+              <MdOutlineShoppingCart /> Add to Cart
+            </button>
           </div>
         </section>
       </div>
