@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import {
-  useGetProductsQuery,
-  useGetProductsByCategoryQuery,
-} from "../api/ApiSlice";
+import { useGetProductsQuery } from "../api/ApiSlice";
 import "./product-card/ProductCard.css";
 import ProductCard from "./product-card/ProductCard";
 import "./sort-products-section/SortProductsSection.css";
@@ -40,9 +37,9 @@ function ProductList() {
     if (selectedCategory === "All") {
       setFilteredProducts(products); // Show all products
     } else {
-      const newProducts = products.filter(
+      const newProducts = products?.filter(
         (product) =>
-          product?.category.toLowerCase() === selectedCategory.toLowerCase()
+          product?.category?.toLowerCase() === selectedCategory.toLowerCase()
       );
       setFilteredProducts(newProducts);
     }
@@ -64,7 +61,7 @@ function ProductList() {
           categoryList={prodCategories}
           handleValue={(e) => filterProducts(e.target.value)}
         />
-        <Sort handleValue={(e)=> sortProducts(e.target.value)} />
+        <Sort handleValue={(e) => sortProducts(e.target.value)} />
       </div>
       <div className="errorSection">{isError && <p>{error.message}</p>}</div>
 
@@ -73,9 +70,8 @@ function ProductList() {
         {filteredProducts?.length !== 0 ? (
           filteredProducts?.map((product) => {
             return (
-              <div key={product.pId}>
-                <ProductCard product={product} />
-              </div>
+                <ProductCard product={product} key={product.pId}/>
+              
             );
           })
         ) : (

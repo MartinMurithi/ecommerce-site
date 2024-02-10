@@ -1,25 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import Navbar from "../navbar/Navbar";
-import { useGetProductByIdQuery } from "../../api/ApiSlice";
+import {
+  useGetProductByIdQuery,
+  useAddToCartMutation,
+} from "../../api/ApiSlice";
 import "./Product.css";
 import { useParams } from "react-router";
 
 function Product() {
+  const [qtyValue, setQtyValue] = useState(1);
   const { id } = useParams();
+  console.log(typeof(id));
   const {
     isLoading,
     isError,
     error,
     data: product,
   } = useGetProductByIdQuery(id);
-
+  const [ addToCartHandler ] = useAddToCartMutation();
 
   const images = product?.images?.map((image) => (
     <img src={image} alt="Product" width="60px" height="60px" />
   ));
 
-  console.log(product);
+  // Increament cart value
+  const increaseCartVal = () => {
+    setQtyValue((qty) => qty + 1);
+  };
+
+  // Decreament cart value
+  const decreamentCartVal = () => {
+    setQtyValue((qty) => qty - 1);
+  };
+
+  useEffect(() => {
+    if (qtyValue < 1) {
+      setQtyValue(1);
+    }
+  }, [qtyValue]);
+
+  const cartProductProps = async () => {
+    // An obj to store the cart product props
+    const cartObj = {
+      id: parseInt(id),
+      qty: qtyValue,
+    };
+    console.log(cartObj);
+    await addToCartHandler(cartObj);
+  };
+
+  // The function to add the product to cart
+  const addToCart = async (e) => {
+    e.preventDefault();
+    await cartProductProps();
+  };
 
   return (
     <>
@@ -41,9 +76,7 @@ function Product() {
             />
           </div>
           <div className="moreImages">
-            <div className="imgCard">
-              {images}
-            </div>
+            <div className="imgCard">{images}</div>
           </div>
         </div>
         {/* Product Info */}
@@ -55,10 +88,7 @@ function Product() {
           <p className="category">
             <span className="bold">Category :</span> {product?.category}
           </p>
-          {/* <p className="prodColor">
-            <span className="bold">Color : </span>
-            {product?.color}
-          </p> */}
+
           <p className="prodColor">
             <span className="bold">Stock : </span>
             {product?.stock}
@@ -68,59 +98,21 @@ function Product() {
           {/* Add to cart section */}
           <div className="addToCartSection">
             <div className="quantity">
-              <button className="quantityBtn">-</button>
-              <span className="prodCount">1</span>
-              <button className="quantityBtn">+</button>
+              <button className="quantityBtn" onClick={decreamentCartVal}>
+                -
+              </button>
+              <span className="prodCount">{qtyValue}</span>
+              <button className="quantityBtn" onClick={increaseCartVal}>
+                +
+              </button>
             </div>
-            <button className="addToCartBtn">
+            <button type="submit" onClick={addToCart} className="addToCartBtn">
               <MdOutlineShoppingCart /> Add to Cart
             </button>
           </div>
         </section>
       </div>
     </>
-    // <>
-    //   {" "}
-    //   <Navbar />
-    //   <div className="productDetailsParent">
-    //     <div className="productSection">
-    //       {/* Product Images */}
-    //       <div className="prodImgParent">
-    //         <div className="mainImg">
-    //           {" "}
-    //           <img
-    //             src="/assets/computers-category.jpeg"
-    //             alt=""
-    //             className="prodImg"
-    //           />
-    //         </div>
-
-    //         <div className="moreImages">
-    //           <div className="imgCard">
-    //             <img src="/assets/computers-category.jpeg" alt="" />
-    //             <img src="/assets/computers-category.jpeg" alt="" />
-    //             <img src="/assets/computers-category.jpeg" alt="" />
-    //             <img src="/assets/computers-category.jpeg" alt="" />
-    //             <img src="/assets/computers-category.jpeg" alt="" />
-    //           </div>
-    //         </div>
-    //       </div>
-    //       {/* Product Info */}
-    //       <section className="prodDetails">
-    //         <p className="prodName">
-    //           Consoles Wireless Pc Gaming Gamepad Gaming Controller No Latency
-    //           Usb Joystick
-    //         </p>
-    //         <p className="prodBrand">Sony</p>
-    //         <p className="category">Electronics</p>
-    //         <p className="prodColor">Black</p>
-    //         <p className="prodPrice">£1200</p>
-    //         {/* Add to cart section */}
-    //         <div className="addToCartSection"></div>
-    //       </section>
-    //     </div>
-    //   </div>
-    // </>
   );
 }
 
