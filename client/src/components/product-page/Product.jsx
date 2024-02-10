@@ -9,20 +9,17 @@ import "./Product.css";
 import { useParams } from "react-router";
 
 function Product() {
+  const [isProdAddedToCart, setIsProdAddedToCart] = useState(false);
   const [qtyValue, setQtyValue] = useState(1);
   const { id } = useParams();
-  console.log(typeof(id));
   const {
     isLoading,
     isError,
     error,
     data: product,
   } = useGetProductByIdQuery(id);
-  const [ addToCartHandler ] = useAddToCartMutation();
 
-  const images = product?.images?.map((image) => (
-    <img src={image} alt="Product" width="60px" height="60px" />
-  ));
+  const [addToCartHandler] = useAddToCartMutation();
 
   // Increament cart value
   const increaseCartVal = () => {
@@ -41,20 +38,29 @@ function Product() {
   }, [qtyValue]);
 
   const cartProductProps = async () => {
-    // An obj to store the cart product props
-    const cartObj = {
-      id: parseInt(id),
-      qty: qtyValue,
-    };
-    console.log(cartObj);
-    await addToCartHandler(cartObj);
+    try {
+      await addToCartHandler({
+        id: parseInt(id),
+        qty: qtyValue,
+      }).unwrap();
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   // The function to add the product to cart
   const addToCart = async (e) => {
     e.preventDefault();
-    await cartProductProps();
+    try {
+      await cartProductProps();
+      setIsProdAddedToCart(true);
+    } catch (err) {
+      console.error(err.message);
+    }
   };
+  const images = product?.images?.map((image) => (
+    <img src={image} alt="Product" width="60px" height="60px" />
+  ));
 
   return (
     <>
@@ -106,9 +112,19 @@ function Product() {
                 +
               </button>
             </div>
-            <button type="submit" onClick={addToCart} className="addToCartBtn">
-              <MdOutlineShoppingCart /> Add to Cart
-            </button>
+            {isProdAddedToCart ? (
+              <button disabled className="addToCartBtn">
+                Added to Cart
+              </button>
+            ) : (
+              <button
+                type="submit"
+                onClick={addToCart}
+                className="addToCartBtn"
+              >
+                <MdOutlineShoppingCart /> Add to Cart
+              </button>
+            )}
           </div>
         </section>
       </div>
