@@ -9,11 +9,22 @@ const getProductsFromCart = (req, res) => {
     }
 
     console.log(results.rows);
-    return res
-      .status(200)
-      .json({ count: results.rows.length, products: results.rows });
+    return res.status(200).json({
+      count: results.rows.length,
+      products: results.rows.sort((a, b) => b - a), //The sort method mutates the array and returns the reference to the array.
+    });
   });
 };
+
+const getCartProductById = (req, res)=>{
+  const id = parseInt(req.params.id);
+  pool.query(queries.getCartProductById, [id], (error, results)=>{
+    if(error){
+      return res.status(500).json({Error: error.message});
+    }
+    return res.status(200).json(results.rows);
+  });
+}
 
 // When a prod is added to the cart, the id is extracted from the params which will act as the foreign key in the cart table.
 
@@ -59,8 +70,8 @@ const updateProdCart = (req, res) => {
   const qty = req.body.qty;
   const id = parseInt(req.params.id);
 
-    console.log(req.body);
-    console.log(req.params);
+  console.log(req.body);
+  console.log(req.params);
 
   // Check if the prod exists
   pool.query(queries.getCartProductById, [id], (error, results) => {
@@ -89,4 +100,9 @@ const updateProdCart = (req, res) => {
   });
 };
 
-module.exports = { getProductsFromCart, addToCart, updateProdCart, deleteProdCart };
+module.exports = {
+  getProductsFromCart,
+  addToCart,
+  updateProdCart,
+  deleteProdCart,
+};

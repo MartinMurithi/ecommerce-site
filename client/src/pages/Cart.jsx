@@ -2,7 +2,7 @@ import React from "react";
 import { useGetCartProductsQuery } from "../api/ApiSlice";
 import Navbar from "../components/navbar/Navbar";
 import CartSection from "../components/cart-section/CartSection";
-import '../components/cart-section/CartSection.css';
+import "../components/cart-section/CartSection.css";
 
 function Cart() {
   const {
@@ -20,12 +20,12 @@ function Cart() {
       ) : (
         products?.length !== 0 &&
         products?.products?.map((product) => {
-          return (
-            <div key={product.pid} className="cart">
-              <CartSection prodCart={product} />
-            </div>
-          );
-        })
+            return (
+              <div key={product.pid} className="cart">
+                <CartSection prodCart={product} />
+              </div>
+            );
+          })
       )}
     </>
   );

@@ -15,7 +15,6 @@ function CartSection({ prodCart }) {
   // Func to increase or decrease qty
   const updateCartQty = async (newQtyValue) => {
     try {
-      console.log(prodCart?.pid);
       await qtyControlHandler({
         id: prodCart?.pid,
         qty: newQtyValue,
@@ -39,8 +38,6 @@ function CartSection({ prodCart }) {
       updateCartQty(newQtyValue)
     }
   };
-
-  console.log(qtyValue);
 
   useEffect(() => {
     if (qtyValue < 1) {
@@ -84,7 +81,7 @@ function CartSection({ prodCart }) {
                 </button>
               </div>
             </div>
-            <p className="productPrice">Price : {prodCart?.price}</p>
+            <p className="productPrice">Price Per Item : {prodCart?.price}</p>
           </div>
         </div>
         {/* </Link> */}
