@@ -4,17 +4,17 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { ApiProvider } from "@reduxjs/toolkit/query/react";
-import { ApiSlice } from "./api/ApiSlice";
+import  { Provider } from 'react-redux';
+import store from "./api/Store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ApiProvider api={ApiSlice}>
+    <Provider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </ApiProvider>
+    </Provider>
   </React.StrictMode>
 );
 

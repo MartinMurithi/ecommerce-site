@@ -11,7 +11,7 @@ const getProductsFromCart = (req, res) => {
     console.log(results.rows);
     return res.status(200).json({
       count: results.rows.length,
-      products: results.rows.sort((a, b) => b - a), //The sort method mutates the array and returns the reference to the array.
+      products: results.rows.sort(), //The sort method mutates the array and returns the reference to the array.
     });
   });
 };

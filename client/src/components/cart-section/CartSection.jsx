@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
-import "./CartSection.css";
-import "../product-page/Product.css";
+import { removeFromCart } from "../../api/CartSlice";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import {
   useRemoveFromCartMutation,
   useUpdateCartQtyMutation,
 } from "../../api/ApiSlice";
+import "./CartSection.css";
+import "../product-page/Product.css";
 
-function CartSection({ prodCart }) {
+function CartSection({ prodCart, updateTotal }) {
   const [qtyValue, setQtyValue] = useState(prodCart?.qty);
+  // const [subTotalAmt, setSubTotalAmt] = useState(prodCart?.price);
+  const [subTotalAmt, setSubTotalAmt] = useState(0);
   const [deleteCartProductHandler, { isLoading }] = useRemoveFromCartMutation();
   const [qtyControlHandler] = useUpdateCartQtyMutation();
-
+  const dispatch = useDispatch();
 
   // Func to increase or decrease qty
   const updateCartQty = async (newQtyValue) => {
@@ -35,7 +40,7 @@ function CartSection({ prodCart }) {
   const decreaseCartVal = () => {
     if (qtyValue > 1) {
       const newQtyValue = qtyValue - 1;
-      updateCartQty(newQtyValue)
+      updateCartQty(newQtyValue);
     }
   };
 
@@ -49,14 +54,24 @@ function CartSection({ prodCart }) {
   const deleteProd = async () => {
     try {
       await deleteCartProductHandler(prodCart?.pid).unwrap();
+      dispatch(removeFromCart(prodCart?.pid));
+      console.log(`${prodCart?.pid} removed from cart`);
+      toast.success("Product removed from cart");
     } catch (err) {
       console.error(err.message);
+      toast.error("An error occurred when removing the product from cart");
     }
   };
 
-  // Remove currency symbol (£) and comma from the price string, then convert it to a number
-  const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
-  const subTotalAmt = price * prodCart?.qty;
+  useEffect(() => {
+    // Calculating subtotal when qtyValue or prodCart changes
+    // Remove currency symbol (£) and comma from the price string, then convert it to a number
+    const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
+    const subTotal = price * prodCart?.qty;
+    setSubTotalAmt(subTotal);
+    // Notify parent component of subtotal change
+    updateTotal(prodCart.pid, subTotalAmt);
+  }, [qtyValue, prodCart]);
 
   return (
     <div className="cartSection">

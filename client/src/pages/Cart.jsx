@@ -5,8 +5,8 @@ import CartSection from "../components/cart-section/CartSection";
 import "../components/cart-section/CartSection.css";
 
 function Cart() {
-  const [totalAmt, setTotalAmt] = useState();
-
+ const [totalAmt, setTotalAmt] = useState(0);
+ const [subtotals, setSubtotals] = useState({});
   const {
     isLoading,
     isError,
@@ -14,17 +14,20 @@ function Cart() {
     data: products,
   } = useGetCartProductsQuery();
 
-  // func to add total amount
-
-  const calcTotalAmt = ()=>{
-    
+  // Function to update the total amount
+  const updateTotal = (productId, subtotal) => {
+    setSubtotals((prevSubtotals) => ({
+      ...prevSubtotals,
+      [productId]: subtotal,
+    }));
   };
 
-  // Everytime the component is mounted, the total amt should be ...
-  useEffect(() =>{
-    calcTotalAmt();
-  }, [totalAmt]);
-
+  // Update the total amount whenever the subtotals change
+  useEffect(() => {
+    const total = Object.values(subtotals).reduce((acc, curr) => acc + curr, 0);
+    setTotalAmt(total);
+  }, [subtotals]);
+  
   return (
     <>
       <Navbar />
@@ -36,14 +39,15 @@ function Cart() {
         products?.products?.map((product) => {
           return (
             <div key={product.pid} className="cart">
-              <CartSection prodCart={product} />
+              <CartSection prodCart={product} updateTotal={updateTotal}/>
+              {console.log(product)}
             </div>
           );
         })
       )}
       <div className="totalAmt">
         <p className="totalAmtText">Total Amount</p>
-        <p className="totalAmount">59000</p>
+        <p className="totalAmount">{totalAmt}</p>
       </div>
     </>
   );
