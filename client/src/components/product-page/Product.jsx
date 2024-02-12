@@ -17,13 +17,13 @@ function Product() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const prodIds = useSelector((state) => state.savedToCartReducer.prodIds);
-
   const {
     isLoading,
     isError,
     error,
     data: product,
   } = useGetProductByIdQuery(id);
+  const [activeImg, setActiveImg] = useState(product?.images?.[0]);
 
   const [addToCartHandler] = useAddToCartMutation();
 
@@ -71,9 +71,9 @@ function Product() {
     }
   };
 
-  const images = product?.images?.map((image) => (
-    <img src={image} alt="Product" width="60px" height="60px" />
-  ));
+  const handleImgClick = (index) => {
+    setActiveImg(index);
+  };
 
   return (
     <>
@@ -87,15 +87,26 @@ function Product() {
         <div className="prodImgParent">
           <div className="mainImg">
             <img
-              src={product?.images?.[0]}
+              src={
+                activeImg ? product?.images[activeImg] : product?.images?.[0]
+              }
               alt="Product"
-              width="100%"
+              width="20%"
               height="auto"
               className="prodImg"
             />
           </div>
           <div className="moreImages">
-            <div className="imgCard">{images}</div>
+            {product?.images?.map((image, index) => (
+              <img
+                src={image}
+                alt="Product"
+                width="60px"
+                height="60px"
+                key={index}
+                onClick={() => handleImgClick(index)}
+              />
+            ))}
           </div>
         </div>
 

@@ -9,8 +9,10 @@ import {
 import "./CartSection.css";
 import "../product-page/Product.css";
 
-function CartSection({ prodCart }) {
+function CartSection({ prodCart, updateTotal }) {
   const [qtyValue, setQtyValue] = useState(prodCart?.qty);
+  // const [subTotalAmt, setSubTotalAmt] = useState(prodCart?.price);
+  const [subTotalAmt, setSubTotalAmt] = useState(0);
   const [deleteCartProductHandler, { isLoading }] = useRemoveFromCartMutation();
   const [qtyControlHandler] = useUpdateCartQtyMutation();
   const dispatch = useDispatch();
@@ -61,9 +63,15 @@ function CartSection({ prodCart }) {
     }
   };
 
-  // Remove currency symbol (£) and comma from the price string, then convert it to a number
-  const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
-  const subTotalAmt = price * prodCart?.qty;
+  useEffect(() => {
+    // Calculating subtotal when qtyValue or prodCart changes
+    // Remove currency symbol (£) and comma from the price string, then convert it to a number
+    const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
+    const subTotal = price * prodCart?.qty;
+    setSubTotalAmt(subTotal);
+    // Notify parent component of subtotal change
+    updateTotal(prodCart.pid, subTotalAmt);
+  }, [qtyValue, prodCart]);
 
   return (
     <div className="cartSection">
