@@ -24,6 +24,7 @@ function Product() {
     data: product,
   } = useGetProductByIdQuery(id);
   const [activeImg, setActiveImg] = useState(product?.images?.[0]);
+  const [defaultDisplayImg, setDefaultDisplayImg] = useState(null);
 
   const [addToCartHandler] = useAddToCartMutation();
 
@@ -75,6 +76,11 @@ function Product() {
     setActiveImg(index);
   };
 
+  useEffect(()=>{
+    const displayImage = product?.images?.[0];
+    setDefaultDisplayImg(displayImage);
+  }, [product]);
+
   return (
     <>
       <Navbar />
@@ -88,7 +94,7 @@ function Product() {
           <div className="mainImg">
             <img
               src={
-                activeImg ? product?.images[activeImg] : product?.images?.[0]
+                activeImg ? product?.images[activeImg] : defaultDisplayImg
               }
               alt="Product"
               width="20%"
