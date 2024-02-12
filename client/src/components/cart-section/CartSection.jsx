@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
-import "./CartSection.css";
-import "../product-page/Product.css";
+import { removeFromCart } from "../../api/CartSlice";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import {
   useRemoveFromCartMutation,
   useUpdateCartQtyMutation,
 } from "../../api/ApiSlice";
+import "./CartSection.css";
+import "../product-page/Product.css";
 
 function CartSection({ prodCart }) {
   const [qtyValue, setQtyValue] = useState(prodCart?.qty);
   const [deleteCartProductHandler, { isLoading }] = useRemoveFromCartMutation();
   const [qtyControlHandler] = useUpdateCartQtyMutation();
-
+  const dispatch = useDispatch();
 
   // Func to increase or decrease qty
   const updateCartQty = async (newQtyValue) => {
@@ -35,7 +38,7 @@ function CartSection({ prodCart }) {
   const decreaseCartVal = () => {
     if (qtyValue > 1) {
       const newQtyValue = qtyValue - 1;
-      updateCartQty(newQtyValue)
+      updateCartQty(newQtyValue);
     }
   };
 
@@ -49,8 +52,12 @@ function CartSection({ prodCart }) {
   const deleteProd = async () => {
     try {
       await deleteCartProductHandler(prodCart?.pid).unwrap();
+      dispatch(removeFromCart(prodCart?.pid));
+      console.log(`${prodCart?.pid} removed from cart`);
+      toast.success("Product removed from cart");
     } catch (err) {
       console.error(err.message);
+      toast.error("An error occurred when removing the product from cart");
     }
   };
 

@@ -83,7 +83,8 @@
 .quantity {
   display: flex;
   align-items: center;
-  margin-right: 20px; 
+  margin-right: 20px;
+  gap: 10px; 
 }
 
 .quantityBtn {
@@ -112,6 +113,18 @@
   border-radius: 3px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.disabledBtn{
+  padding: 10px 20px;
+  font-size: .9rem;
+  background-color: transparent;
+  color: black;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  outline: transparent;
+  border-radius: 3px;
 }
 
 .addToCartBtn:hover {

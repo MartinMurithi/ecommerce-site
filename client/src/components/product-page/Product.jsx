@@ -1,25 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import toast from "react-hot-toast";
+import { useParams } from "react-router";
+import { useDispatch, useSelector, UseSelector } from "react-redux";
 import Navbar from "../navbar/Navbar";
 import {
   useGetProductByIdQuery,
   useAddToCartMutation,
 } from "../../api/ApiSlice";
+import { addProdToCart } from "../../api/CartSlice";
 import "./Product.css";
-import { useParams } from "react-router";
 
 function Product() {
   const [qtyValue, setQtyValue] = useState(1);
+  const [isProdInCart, setIsProdInCart] = useState(false);
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const prodIds = useSelector((state) => state.savedToCartReducer.prodIds);
+
   const {
     isLoading,
     isError,
     error,
     data: product,
   } = useGetProductByIdQuery(id);
+
   const [addToCartHandler] = useAddToCartMutation();
 
+  useEffect(() => {
+    setIsProdInCart(prodIds?.includes(id));
+  }, [prodIds]);
 
   // Increament cart value
   const increaseCartVal = () => {
@@ -53,6 +63,7 @@ function Product() {
     e.preventDefault();
     try {
       await cartProductProps();
+      dispatch(addProdToCart(id));
       toast.success("Product added to cart");
     } catch (err) {
       console.error(err.message);
@@ -87,6 +98,7 @@ function Product() {
             <div className="imgCard">{images}</div>
           </div>
         </div>
+
         {/* Product Info */}
         <section className="prodDetails">
           <h1 className="prodName">{product?.prod_name}</h1>
@@ -96,7 +108,6 @@ function Product() {
           <p className="category">
             <span className="bold">Category :</span> {product?.category}
           </p>
-
           <p className="prodColor">
             <span className="bold">Stock : </span>
             {product?.stock}
@@ -106,18 +117,35 @@ function Product() {
           {/* Add to cart section */}
 
           <div className="addToCartSection">
-            <div className="quantity">
-              <button className="quantityBtn" onClick={decreamentCartVal}>
-                -
+            {isProdInCart ? (
+              <button disabled className="disabledBtn">
+                <MdOutlineShoppingCart />
+                Product added to cart
               </button>
-              <span className="prodCount">{qtyValue}</span>
-              <button className="quantityBtn" onClick={increaseCartVal}>
-                +
-              </button>
-            </div>
-            <button type="submit" onClick={addToCart} className="addToCartBtn">
-              <MdOutlineShoppingCart /> Add to Cart
-            </button>
+            ) : (
+              <>
+                <div className="quantity">
+                  <button className="quantityBtn" onClick={decreamentCartVal}>
+                    -
+                  </button>
+                  <span disabled={isProdInCart} className="prodCount">
+                    {qtyValue}
+                  </span>
+                  <button className="quantityBtn" onClick={increaseCartVal}>
+                    +
+                  </button>
+                </div>
+                <div className="addToCartBtnSection">
+                  <button
+                    type="submit"
+                    onClick={addToCart}
+                    className="addToCartBtn"
+                  >
+                    <MdOutlineShoppingCart /> Add to Cart
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </section>
       </div>
