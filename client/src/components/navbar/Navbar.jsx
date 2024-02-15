@@ -1,68 +1,51 @@
-import React from "react";
-import {
-  MdSearch,
-  MdOutlineAccountCircle,
-  MdOutlineShoppingCart,
-  MdMenu,
-} from "react-icons/md";
+import React, { useState } from "react";
+import { MdOutlineSearch, MdOutlineShoppingCart, MdMenu } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import AccountDropdown from "../account-modal/AccountDropdown";
 import "./Navbar.css";
 
 const Navbar = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  const handleOpenAccountModal = () => {
+    setIsVisible((state) => !state);
+  };
+  
   return (
-    <nav className="bg-white shadow-md">
-      <div className="container mx-auto flex items-center justify-between py-4 px-6">
+    <nav>
+      <div className="navSection">
         {/* Logo */}
-        <NavLink to="/" className="text-xl font-bold text-gray-800">
-          Petersheppard
+        <NavLink to="/" className="logo">
+          <img src="/assets/logo.jpg" alt="Logo" width="100%" height="auto" />
         </NavLink>
 
-        {/* Menu Icon for Small Screens */}
-        <div className="block lg:hidden">
-          <MdMenu className="text-gray-800 text-3xl" />
+        {/* Nav links on large screens */}
+        <div className="navLinks">
+          <NavLink to="/home" className="navItem">
+            Home
+          </NavLink>
+          <NavLink to="/about" className="navItem">
+            About Us
+          </NavLink>
+          <NavLink to="/contact" className="navItem">
+            Contact
+          </NavLink>
+          <NavLink to="/contact" className="navItem">
+            Blog
+          </NavLink>
         </div>
 
-        {/* Navigation Links */}
-        <div className="hidden lg:flex items-center space-x-4">
-          {/* Search Bar */}
-          <div className="flex items-center border border-gray-200 rounded-md">
-            <input
-              type="search"
-              placeholder="Search for shoes..."
-              className="w-48 px-4 py-2 focus:outline-none"
-              id="searchInput"
-            />
-            <MdSearch className="text-gray-600 mx-2" />
-          </div>
-
-          {/* Language Selector (Assuming it's in the same position as the cart and user account) */}
-          <div>
-            <select className="border border-gray-200 rounded px-3 py-2">
-              <option value="en">English</option>
-              <option value="fr">Français</option>
-              {/* Add more language options as needed */}
-            </select>
-          </div>
-
-          {/* Cart */}
-          <NavLink
-            to="/cart"
-            className="text-gray-800 flex items-center space-x-1"
-          >
-            <MdOutlineShoppingCart className="text-xl" />
-            <span>Cart</span>
-          </NavLink>
-
-          {/* User Account */}
-          <NavLink
-            to="/login"
-            className="text-gray-800 flex items-center space-x-1"
-          >
-            <MdOutlineAccountCircle className="text-xl" />
-            <span>My Account</span>
+        {/* Nav icons */}
+        <div className="navIcons">
+          <MdOutlineSearch className="navIcon" />
+          <FaRegUser className="navIcon" onClick={handleOpenAccountModal} />
+          <NavLink to="/cart">
+            <MdOutlineShoppingCart className="navIcon" />
           </NavLink>
         </div>
       </div>
+      {isVisible ? <AccountDropdown /> : null}
     </nav>
   );
 };

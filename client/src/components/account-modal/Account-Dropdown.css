@@ -1,0 +1,13 @@
+
+.dropDownSection{
+    background-color: red;
+    width: max-content;
+    position: absolute;
+    top: 90px;
+    right: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+

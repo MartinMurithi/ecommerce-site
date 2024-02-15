@@ -1,11 +1,11 @@
 nav {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 20px 0;
 }
 
 .navSection {
-  width: 90%;
+  width: 95%;
   margin: auto;
   height: auto;
   display: flex;
@@ -13,107 +13,34 @@ nav {
   align-items: center;
 }
 
-.logo {
-  font-size: 2.2rem;
-  color: #366699;
-}
-
-.searchBarParent {
-  width: 50%;
+.navLinks{
   display: flex;
-  align-items: center;
-  padding: 5px 15px;
-  border: 2px solid #366699;
-  border-radius: 2px;
-}
-
-select {
-  padding: 6px 20px;
-  outline: transparent;
-  cursor: pointer;
-  color: #5f5f5f;
-  background-color: transparent;
-  border-style: none;
-  margin-right: 2px;
-}
-
-option {
-  color: #5f5f5f;
-}
-
-.searchInputSection {
-  width: 100%;
-  display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  gap: 80px;
 }
 
-.searchInput {
-  padding: 6px;
-  width: 93%;
-  outline: transparent;
-  border-style: none;
-  color: #5f5f5f;
+.navItem{
+  color: #222222;
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
 }
 
-.searchInput:-webkit-autofill,
-.searchInput:-webkit-autofill:hover,
-.searchInput:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
-}
-.searchIcon {
-  width: 25px;
-  height: 25px;
-  color: #5f5f5f;
-  cursor: pointer;
+.navItem:hover{
+  color: #7e7e7e;
+  border-bottom: 3px solid #EB7025;
 }
 
-.navRightSide {
+.navIcons{
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 30px;
 }
 
-.langDropdown {
-  display: flex;
-  align-items: center;
-}
-
-.lang {
-  font-size: 0.8rem;
-}
-
-.navAccount {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.navIcon{
+  font-size: 1.4rem;
+  color: #222222;
   cursor: pointer;
-}
-
-.accountIcon {
-  font-size: 1.5rem;
-  color: #5f5f5f;
-}
-
-.accountText {
-  font-size: .8rem;
-  margin: 1px;
-  color: #5f5f5f;
-}
-
-.navCart{
-    display: flex;align-items: center;
-    gap: 5px;
-    cursor: pointer;
-}
-
-.cartIcon{
-    font-size: 1.5rem;
-    color: #5f5f5f;
-}
-
-.cartText{
-    font-size: .9rem;
-    color: #5f5f5f;
 }
