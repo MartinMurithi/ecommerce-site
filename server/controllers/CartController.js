@@ -8,7 +8,6 @@ const getProductsFromCart = (req, res) => {
       return res.status(500).json({ Error: error.message });
     }
 
-    console.log(results.rows);
     return res.status(200).json({
       count: results.rows.length,
       products: results.rows.sort(), //The sort method mutates the array and returns the reference to the array.

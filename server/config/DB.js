@@ -7,7 +7,7 @@ const pool = new Pool({
   "postgres",
   host: "localhost",
   database: "ecommerce",
-  password: process.env.DB_PASSWORD,
+  password: process.env.Password,
   port: process.env.DB_PORT,
 });
 
