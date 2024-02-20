@@ -2,18 +2,23 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const router = express.Router();
 
 const prodRouter = require("./routes/productRoute");
-const cartRouter = require('./routes/CartRoute');
+const cartRouter = require("./routes/CartRoute");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json())
+app.use(express.json());
 app.use(cors());
-app.use("/ammazonne/api/v1", prodRouter);
-app.use("/ammazonne/api/v1", cartRouter);
+app.use("/", prodRouter);
+app.use("/", cartRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use("/athena/api/v1/home", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "Home.html"));
+});
 
 app.all("*", (req, res) => {
   res.status(404);
@@ -26,6 +31,6 @@ app.all("*", (req, res) => {
   }
 });
 
-app.listen(PORT, ()=>{
-    console.log("Server running");
+app.listen(PORT, () => {
+  console.log("Server running");
 });

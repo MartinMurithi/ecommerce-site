@@ -12,18 +12,18 @@ const {
 
 const prodRouter = Router();
 
-prodRouter.get("/products", getProducts);
-prodRouter.get("/products/:id", getProductById);
+prodRouter.get("/athena/api/v1/products", getProducts);
+prodRouter.get("/athena/api/v1/products/:id", getProductById);
 prodRouter.post(
-  "/add-product",
+  "/athena/api/v1/add-product",
   upload.array("images", 5),
   multerErrHandler,
   postProducts
 );
-prodRouter.delete("/delete-product/:id", deleteProduct);
-prodRouter.delete("/delete-all-products", deleteAllProducts);
+prodRouter.delete("/athena/api/v1/delete-product/:id", deleteProduct);
+prodRouter.delete("/athena/api/v1/delete-all-products", deleteAllProducts);
 prodRouter.put(
-  "/update-product/:id",
+  "/athena/api/v1/update-product/:id",
   upload.array("images", 5),
   multerErrHandler,
   updateProduct
