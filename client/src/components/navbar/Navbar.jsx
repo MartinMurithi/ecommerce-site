@@ -16,13 +16,13 @@ const Navbar = () => {
     <nav>
       <div className="navSection">
         {/* Logo */}
-        <NavLink to="/home" className="logo">
+        <NavLink to="/" className="logo">
           <img src="/assets/logo.jpg" alt="Logo" width="100%" height="auto" />
         </NavLink>
 
         {/* Nav links on large screens */}
         <div className="navLinks">
-          <NavLink to="/home" className="navItem">
+          <NavLink to="/" className="navItem">
             Home
           </NavLink>
           <NavLink to="/about" className="navItem">
