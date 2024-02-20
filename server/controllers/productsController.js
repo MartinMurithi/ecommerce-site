@@ -4,7 +4,7 @@ const cloudinary = require("../config/Cloudinary");
 
 const getProducts = (req, res) => {
   pool.query(queries.getProductsQuery, (error, results) => {
-    if (error) return res.status(500).json({ error: error.message });
+    if (error) return res.status(500).json({err_name : error.name, error: error.message });
     return res.status(200).json(results.rows);
   });
 };

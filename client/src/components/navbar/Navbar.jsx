@@ -16,7 +16,7 @@ const Navbar = () => {
     <nav>
       <div className="navSection">
         {/* Logo */}
-        <NavLink to="/" className="logo">
+        <NavLink to="/home" className="logo">
           <img src="/assets/logo.jpg" alt="Logo" width="100%" height="auto" />
         </NavLink>
 
@@ -31,7 +31,7 @@ const Navbar = () => {
           <NavLink to="/contact" className="navItem">
             Contact
           </NavLink>
-          <NavLink to="/contact" className="navItem">
+          <NavLink to="/blog" className="navItem">
             Blog
           </NavLink>
         </div>
