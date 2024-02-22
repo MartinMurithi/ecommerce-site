@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+
+.whyUsSection {
+  width: 95%;
+  margin: 80px auto 80px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chooseUs {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.chooseUsIcon {
+    /* width: 100px; */
+}
+
+.chooseUs1 {
+  color: #000000;
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1rem;
+}
+
+.chooseUs2 {
+  color: #666666;
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: 400;
+  margin-top: 8px;
+  font-size: .9rem;
+}
