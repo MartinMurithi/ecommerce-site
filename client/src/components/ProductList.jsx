@@ -57,11 +57,11 @@ function ProductList() {
   return (
     <>
       <div className="sortProductsSection">
-        <CategoryDropDown
+        {/* <CategoryDropDown
           categoryList={prodCategories}
           handleValue={(e) => filterProducts(e.target.value)}
         />
-        <Sort handleValue={(e) => sortProducts(e.target.value)} />
+        <Sort handleValue={(e) => sortProducts(e.target.value)} /> */}
       </div>
       <div className="errorSection">{isError && <p>{error.message}</p>}</div>
 

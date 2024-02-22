@@ -17,7 +17,7 @@ const Navbar = () => {
       <div className="navSection">
         {/* Logo */}
         <NavLink to="/" className="logo">
-          <img src="/assets/logo.jpg" alt="Logo" width="100%" height="auto" />
+          Voguish
         </NavLink>
 
         {/* Nav links on large screens */}

@@ -1,19 +1,19 @@
 import React from "react";
 import Navbar from "../components/navbar/Navbar";
 import Banner from "../components/banner/Banner";
-import Categories from "../components/home-categories/Categories";
 import LoadMore from "../components/load-more-btn/LoadMore";
 import Subscription from "../components/subscription/Subscription";
 import Footer from "../components/footer/Footer";
 import ProductList from "../components/ProductList";
 import SortProductsSection from "../components/sort-products-section/SortProductsSection";
+import WhyUs from "../components/why-us/WhyUs";
 
 function Home() {
   return (
     <>
       <Navbar />
       <Banner />
-      <Categories />
+      <WhyUs />
       {/* <SortProductsSection /> */}
       <ProductList />
       <LoadMore />
