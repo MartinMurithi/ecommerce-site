@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap");
+
+.categories {
+  width: max-content;
+  margin: 100px auto 0px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.catBtn {
+  background-color: transparent;
+  border-style: none;
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-size: 1rem;
+  font-style: normal;
+  outline: transparent;
+  cursor: pointer;
+}
+
+.catBtn:hover{
+    border-bottom: 2px solid #eb7025;
+}
