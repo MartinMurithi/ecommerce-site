@@ -2,7 +2,7 @@
 
 .whyUsSection {
   width: 95%;
-  margin: 80px auto 80px auto;
+  margin: 80px auto 0px auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -14,9 +14,6 @@
   gap: 20px;
 }
 
-.chooseUsIcon {
-    /* width: 100px; */
-}
 
 .chooseUs1 {
   color: #000000;
@@ -25,6 +22,10 @@
   font-weight: 700;
   font-style: normal;
   font-size: 1rem;
+}
+
+.chooseUs1:hover{
+  color: #eb7025;
 }
 
 .chooseUs2 {

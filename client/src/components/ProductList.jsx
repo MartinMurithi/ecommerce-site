@@ -3,29 +3,15 @@ import { useGetProductsQuery } from "../api/ApiSlice";
 import "./product-card/ProductCard.css";
 import ProductCard from "./product-card/ProductCard";
 import "./sort-products-section/SortProductsSection.css";
-import CategoryDropDown from "./categories-dropdown/CategoryDropDown";
+import Categories from "./categories/Categories";
 import Sort from "./sort-products/Sort";
 import { useEffect } from "react";
 
 function ProductList() {
-  // These are the options displayed in the dropdown
-  const prodCategories = [
-    { value: "", text: "--Select a product category--" },
-    { value: "All", text: "All" },
-    { value: "Accessories", text: "Accessories" },
-    { value: "Babies", text: "Babies" },
-    { value: "Beauty", text: "Beauty" },
-    { value: "Decorations", text: "Decorations" },
-    { value: "Electronics", text: "Electronics" },
-    { value: "Fashion", text: "Fashion" },
-    { value: "Food", text: "Food" },
-    { value: "Furniture", text: "Furniture" },
-    { value: "Watches", text: "Watches" },
-    { value: "Computers", text: "Computer" },
-  ];
-
   const { isLoading, isError, error, data: products } = useGetProductsQuery();
   const [filteredProducts, setFilteredProducts] = useState([]);
+
+  const prodCategoryList = products?.map((product) => product?.category);
 
   useEffect(() => {
     if (products) {
@@ -33,13 +19,13 @@ function ProductList() {
     }
   }, [products]);
 
-  const filterProducts = (selectedCategory) => {
-    if (selectedCategory === "All") {
+  const filterProducts = (category) => {
+    if (category === "All") {
       setFilteredProducts(products); // Show all products
     } else {
       const newProducts = products?.filter(
         (product) =>
-          product?.category?.toLowerCase() === selectedCategory.toLowerCase()
+          product?.category === category
       );
       setFilteredProducts(newProducts);
     }
@@ -57,11 +43,11 @@ function ProductList() {
   return (
     <>
       <div className="sortProductsSection">
-        {/* <CategoryDropDown
-          categoryList={prodCategories}
-          handleValue={(e) => filterProducts(e.target.value)}
+        <Categories
+          categoryList={prodCategoryList}
+          handleValue={filterProducts}
         />
-        <Sort handleValue={(e) => sortProducts(e.target.value)} /> */}
+        {/* <Sort handleValue={(e) => sortProducts(e.target.value)} /> */}
       </div>
       <div className="errorSection">{isError && <p>{error.message}</p>}</div>
 
@@ -69,10 +55,7 @@ function ProductList() {
       <div className="productList">
         {filteredProducts?.length !== 0 ? (
           filteredProducts?.map((product) => {
-            return (
-                <ProductCard product={product} key={product.pId}/>
-              
-            );
+            return <ProductCard product={product} key={product.pId} />;
           })
         ) : (
           <p>No products available at the moment</p>
