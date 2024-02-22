@@ -1,43 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+.bannerSection {
+  width: 100%;
+  max-width: 100%;
+  height: 90svh;
+  margin: 8px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 90px;
+  background-image: url("./../../../public/assets/BannerImg11.webp");
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 2px;
+}
 
-.bannerSection{
-    width: 90%;
-    max-width: 90%;
-    height: 50vh;
-    margin: 30px auto 0 auto;
+.bannerInfo{
+    width: 50%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-left: 90px;
-    background-image: url("./../../../public/assets/banner.jpg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    border-radius: 5px;
-}
-
-.bannerText1{
-    color: #353535;
-    font-size: 1.4rem;
-}
-
-.bannerText2{
-    font-size: 3rem;
-    color: #ffffff;
-    margin-top: 5px;
-}
-
-.bannerLink{
-    display: flex;
     align-items: center;
-    background-color: #353535;
-    color: #ffffff;
-    padding: 10px 15px;
-    font-size: .9rem;
-    margin-top: 15px;
-    cursor: pointer;
+    justify-content: center;
 }
 
-.bannerArrow{
-    font-size: 20px;
-    margin-left: 10px;
+.bannerText1 {
+  color: #353535;
+  font-size: 3rem;
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.sliderBorder{
+    width: 55%;
+    margin: 10px auto;
+}
+
+.bannerText {
+  font-size: 1.2rem;
+  color: #353535;
+  margin-top: 5px;
+  line-height: 30px;
+  text-align: center;
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #f7f7f7;
+  color: #000000;
+  padding: 15px 30px;
+  font-size: .9rem;
+  margin-top: 15px;
+  cursor: pointer;
+  outline: transparent;
+  border-style: none;
+}
+
+.bannerArrow {
+  font-size: 1.3rem;
+}
+
+.actionBtn:hover{
+    background-color: #eb7025;
+    color: #f7f7f7;
+    padding: 10px 20px;
 }

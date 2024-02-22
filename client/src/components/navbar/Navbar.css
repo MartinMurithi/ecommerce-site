@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
+
 nav {
   width: 100%;
   margin-top: 10px;
@@ -13,34 +15,44 @@ nav {
   align-items: center;
 }
 
-.navLinks{
+.logo {
+  color: #000000 !important;
+  font-size: 3.3rem;
+  font-family: "Great Vibes", cursive;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+}
+
+.navLinks {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 80px;
 }
 
-.navItem{
+.navItem {
   color: #222222;
   font-weight: 600;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1rem;
+  font-family: "Open Sans";
+  font-size: 0.9rem;
+  text-transform: uppercase;
 }
 
-.navItem:hover{
+.navItem.active {
   color: #7e7e7e;
-  border-bottom: 3px solid #EB7025;
+  border-bottom: 3px solid #eb7025;
 }
 
-.navIcons{
+.navIcons {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 30px;
 }
 
-.navIcon{
+.navIcon {
   font-size: 1.4rem;
-  color: #222222;
+  color: #000000;
   cursor: pointer;
 }
