@@ -10,7 +10,7 @@ function ProductCard({ product }) {
     <section className="productCard">
       <Link to={`/products/${id}`}>
         <img
-          src={product?.images?.[2]}
+          src={product?.images?.[0]}
           alt="Product"
           width="280px"
           height="280px"

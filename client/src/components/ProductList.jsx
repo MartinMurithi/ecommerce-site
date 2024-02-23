@@ -41,7 +41,7 @@ function ProductList() {
   };
 
   return (
-    <>
+    <div className="productsListSection">
       <div className="sortProductsSection">
         <Categories
           categoryList={prodCategoryList}
@@ -61,7 +61,7 @@ function ProductList() {
           <p>No products available at the moment</p>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

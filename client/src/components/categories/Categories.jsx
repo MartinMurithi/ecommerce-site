@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Categories.css";
 
 function Categories({ categoryList, handleValue }) {
-  const [currentCat, setCurrentCat] = useState("");
   const categoriesSet = new Set();
   categoriesSet.add("All");
   if (categoryList?.length !== 0) {
@@ -10,7 +9,7 @@ function Categories({ categoryList, handleValue }) {
   }
 
   const newCatList = Array.from(categoriesSet);
-  
+
   const catBtn = newCatList?.map((category, index) => (
     <button
       key={index}
