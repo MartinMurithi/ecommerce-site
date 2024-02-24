@@ -106,7 +106,7 @@ function CartSection({ prodCart, updateTotal }) {
         </div>
         <div className="deleteBtnSection">
           <button className="deleteBtn" onClick={deleteProd}>
-            {isLoading ? "Deleting" : "Delete"}
+            {isLoading ? "Removing From Cart" : "Remove From Cart"}
           </button>
         </div>
       </div>

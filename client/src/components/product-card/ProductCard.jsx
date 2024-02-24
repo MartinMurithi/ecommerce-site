@@ -10,14 +10,14 @@ function ProductCard({ product }) {
     <section className="productCard">
       <Link to={`/products/${id}`}>
         <img
-          src={product?.images?.[0]}
+          src={product?.images?.[3]}
           alt="Product"
-          width="280px"
-          height="280px"
+          width="260px"
+          height="260px"
           className="prodImg"
         />
         <div className="cardDetails">
-          <p className="cardCategory">{product?.category}</p>
+          {/* <p className="cardCategory">{product?.category}</p> */}
           <p className="cardTitle">{product.prod_name}</p>
           <h5 className="cardPrice">{product.price}</h5>
         </div>
