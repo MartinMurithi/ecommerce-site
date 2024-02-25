@@ -14,13 +14,11 @@ const prodCartSlice = createSlice({
   reducers: {
     addProdToCart: (state, action) => {
       state.prodIds.push(action.payload);
-      console.log(action.payload);
       localStorage.setItem("ids", JSON.stringify(state.prodIds));
     },
     removeFromCart: (state, action) => {
       const prodIdToRemove = action.payload.toString();
       state.prodIds = state.prodIds.filter((id) => id !== prodIdToRemove);
-      console.log(state.prodIds);
       localStorage.setItem("ids", JSON.stringify(state.prodIds));
     },
   },
