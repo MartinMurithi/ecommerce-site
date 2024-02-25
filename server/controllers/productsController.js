@@ -1,3 +1,4 @@
+const { v4:uuidv4 } = require("uuid");
 const pool = require("../config/DB");
 const queries = require("../queries/ProductsQueries");
 const cloudinary = require("../config/Cloudinary");
@@ -24,6 +25,7 @@ const getProductById = (req, res) => {
 };
 
 const postProducts = async (req, res) => {
+  const productId = uuidv4();
   const { prod_name, prod_desc, price, stock, category, brand } = req.body;
   const images = req.files;
 
@@ -52,12 +54,13 @@ const postProducts = async (req, res) => {
 
     pool.query(
       queries.postProductQuery,
-      [prod_name, prod_desc, price, stock, category, imageURLS, brand],
+      [prod_name, prod_desc, price, stock, category, imageURLS, brand, productId],
       (error, results) => {
         if (error) return res.status(500).json({ error: error.message });
         res.status(201).json({
           message: "Product added successfully",
           product: {
+            id: productId,
             name: prod_name,
             description: prod_desc,
             price: price,
