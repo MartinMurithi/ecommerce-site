@@ -56,3 +56,13 @@ nav {
   color: #000000;
   cursor: pointer;
 }
+
+.cartCount {
+  font-size: 0.6rem;
+  background-color: #eb7025;
+  border-radius: 50%;
+  padding: 4px 6px;
+  position: relative;
+  left: -8px;
+  top: -15px;
+}

@@ -11,7 +11,6 @@ import "../product-page/Product.css";
 
 function CartSection({ prodCart, updateTotal }) {
   const [qtyValue, setQtyValue] = useState(prodCart?.qty);
-  // const [subTotalAmt, setSubTotalAmt] = useState(prodCart?.price);
   const [subTotalAmt, setSubTotalAmt] = useState(0);
   const [deleteCartProductHandler, { isLoading }] = useRemoveFromCartMutation();
   const [qtyControlHandler] = useUpdateCartQtyMutation();
@@ -44,12 +43,6 @@ function CartSection({ prodCart, updateTotal }) {
     }
   };
 
-  useEffect(() => {
-    if (qtyValue < 1) {
-      setQtyValue(1);
-    }
-  }, [qtyValue]);
-
   // Func to delete prod from cart
   const deleteProd = async () => {
     try {
@@ -64,53 +57,59 @@ function CartSection({ prodCart, updateTotal }) {
   };
 
   useEffect(() => {
+    if (qtyValue < 1) {
+      setQtyValue(1);
+    }
     // Calculating subtotal when qtyValue or prodCart changes
     // Remove currency symbol (£) and comma from the price string, then convert it to a number
     const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
     const subTotal = price * prodCart?.qty;
     setSubTotalAmt(subTotal);
-    // Notify parent component of subtotal change
-    updateTotal(prodCart.pid, subTotalAmt);
+    updateTotal(subTotal);
   }, [qtyValue, prodCart]);
 
   return (
-    <div className="cartSection">
-      <div className="cartContainer">
-        <div className="cartItem">
-          <div className="productImage">
-            <img src={prodCart?.images[0]} alt="Product" />
-          </div>
-          <div className="productDetails">
-            <p className="productName">{prodCart?.prod_name}</p>
-            <div className="quantityControl">
-              {/* <p className="productName">Quantity : </p> */}
-              <div className="quantity">
-                <button className="quantityBtn" onClick={decreaseCartVal}>
-                  -
-                </button>
-                <span className="quantity">{prodCart?.qty}</span>
-                {/* <span className="prodCount">{qtyValue}</span> */}
-                <button className="quantityBtn" onClick={increaseCartVal}>
-                  +
-                </button>
-              </div>
+    <>
+      <h2 className="cartTitle">My Cart</h2>
+      <div className="cartSection">
+        <div className="cartContainer">
+          <div className="cartItem">
+            <div className="productImage">
+              <img src={prodCart?.images[0]} alt="Product" />
             </div>
-            <p className="productPrice">Price Per Item : {prodCart?.price}</p>
+            <div className="productDetails">
+              <p className="productName">{prodCart?.prod_name}</p>
+              <div className="quantityControl">
+                {/* <p className="productName">Quantity : </p> */}
+                <div className="quantity">
+                  <button className="quantityBtn" onClick={decreaseCartVal}>
+                    -
+                  </button>
+                  <span className="quantity">{prodCart?.qty}</span>
+                  {/* <span className="prodCount">{qtyValue}</span> */}
+                  <button className="quantityBtn" onClick={increaseCartVal}>
+                    +
+                  </button>
+                </div>
+              </div>
+              <p className="productPrice">Price Per Item : {prodCart?.price}</p>
+            </div>
           </div>
-        </div>
-        <hr />
+          <hr />
 
-        <div className="subtotal">
-          <p className="subtotalText">Subtotal:</p>
-          <p className="subtotalAmount">£{subTotalAmt.toLocaleString()}</p>
-        </div>
-        <div className="deleteBtnSection">
-          <button className="deleteBtn" onClick={deleteProd}>
-            {isLoading ? "Removing From Cart" : "Remove From Cart"}
-          </button>
+          <div className="subtotal">
+            <p className="subtotalText">Subtotal:</p>
+            <p className="subtotalAmount">£{subTotalAmt.toLocaleString()}</p>
+          </div>
+
+          <div className="deleteBtnSection">
+            <button className="deleteBtn" onClick={deleteProd}>
+              {isLoading ? "Removing From Cart" : "Remove From Cart"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -17,7 +17,6 @@ import "./Product.css";
 function Product() {
   const [qtyValue, setQtyValue] = useState(1);
   const [isProdInCart, setIsProdInCart] = useState(false);
-  const [prodCategory, setProdCategory] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
   const prodIds = useSelector((state) => state.savedToCartReducer.prodIds);
