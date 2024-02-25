@@ -22,8 +22,7 @@ function Cart() {
   return (
     <>
       <Navbar />
-      <h2 className="cartTitle">My Cart</h2>
-
+      
       {isError && <p>{error.message}</p>}
       {isLoading ? (
         <div>Loading.....</div>
