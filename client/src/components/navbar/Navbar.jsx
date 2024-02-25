@@ -3,10 +3,12 @@ import { MdOutlineSearch, MdOutlineShoppingCart, MdMenu } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import AccountDropdown from "../account-modal/AccountDropdown";
+import { useSelector } from "react-redux";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const prodIds = useSelector((state) => state.savedToCartReducer.prodIds);
   
   const handleOpenAccountModal = () => {
     setIsVisible((state) => !state);
@@ -42,6 +44,7 @@ const Navbar = () => {
           <FaRegUser className="navIcon" onClick={handleOpenAccountModal} />
           <NavLink to="/cart">
             <MdOutlineShoppingCart className="navIcon" />
+            <span className="cartCount">{prodIds?.length}</span>
           </NavLink>
         </div>
       </div>

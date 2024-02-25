@@ -1,12 +1,4 @@
 import React from "react";
-import {
-  MdOutlineContactSupport,
-  MdOutlineDiscount,
-  MdOutlineLocalShipping,
-} from "react-icons/md";
-
-import { FaDollarSign, FaTruckFast } from "react-icons/fa6";
-
 import "./WhyUs.css";
 
 function WhyUs() {
