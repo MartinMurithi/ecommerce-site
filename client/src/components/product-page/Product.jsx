@@ -2,35 +2,38 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
-import { useDispatch, useSelector, UseSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../navbar/Navbar";
+import ProductCard from "../product-card/ProductCard";
 import {
   useGetProductByIdQuery,
   useAddToCartMutation,
+  useGetProductsQuery,
 } from "../../api/ApiSlice";
 import { addProdToCart } from "../../api/CartSlice";
+import "../product-card/ProductCard.css";
 import "./Product.css";
 
 function Product() {
   const [qtyValue, setQtyValue] = useState(1);
   const [isProdInCart, setIsProdInCart] = useState(false);
+  const [prodCategory, setProdCategory] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
   const prodIds = useSelector((state) => state.savedToCartReducer.prodIds);
   const {
+    isSuccess,
     isLoading,
     isError,
     error,
     data: product,
   } = useGetProductByIdQuery(id);
+  const { data: products } = useGetProductsQuery();
+  const [similarProducts, setSimilarProducts] = useState([]);
   const [activeImg, setActiveImg] = useState(product?.images?.[0]);
   const [defaultDisplayImg, setDefaultDisplayImg] = useState(null);
 
   const [addToCartHandler] = useAddToCartMutation();
-
-  useEffect(() => {
-    setIsProdInCart(prodIds?.includes(id));
-  }, [prodIds]);
 
   // Increament cart value
   const increaseCartVal = () => {
@@ -76,9 +79,30 @@ function Product() {
     setActiveImg(index);
   };
 
-  useEffect(()=>{
+  // Display other products from the same category
+  const filterProducts = () => {
+    if (product) {
+      const filteredProducts = products?.filter(
+        (prod) => prod.category === product?.category && prod.pid !== product.pid
+      );
+      // Slice, create a shallow copy of the array, removes items based ont starting and ending index.
+      
+      setSimilarProducts(filteredProducts);
+    }
+  };
+
+
+  useEffect(() => {
+    // Checks if product is already added to cart
+    setIsProdInCart(prodIds?.includes(id));
+
     const displayImage = product?.images?.[0];
     setDefaultDisplayImg(displayImage);
+    filterProducts();
+  }, [product, prodIds]);
+
+  useEffect(() => {
+    filterProducts();
   }, [product]);
 
   return (
@@ -93,11 +117,9 @@ function Product() {
         <div className="prodImgParent">
           <div className="mainImg">
             <img
-              src={
-                activeImg ? product?.images[activeImg] : defaultDisplayImg
-              }
+              src={activeImg ? product?.images[activeImg] : defaultDisplayImg}
               alt="Product"
-              width="20%"
+              width="auto"
               height="auto"
               className="prodImg"
             />
@@ -118,6 +140,10 @@ function Product() {
 
         {/* Product Info */}
         <section className="prodDetails">
+          <p className="prodStock">
+            <span className="stock">In Stock</span>
+            {product?.stock}
+          </p>
           <h1 className="prodName">{product?.prod_name}</h1>
           <p className="prodBrand">
             <span className="bold">Brand : </span> {product?.brand}
@@ -125,10 +151,7 @@ function Product() {
           <p className="category">
             <span className="bold">Category :</span> {product?.category}
           </p>
-          <p className="prodColor">
-            <span className="bold">Stock : </span>
-            {product?.stock}
-          </p>
+
           <p className="prodPrice">Price : {product?.price}</p>
           <p className="prodDescription">{product?.prod_desc}</p>
           {/* Add to cart section */}
@@ -165,6 +188,22 @@ function Product() {
             )}
           </div>
         </section>
+      </div>
+
+      {/* Other reccommende products */}
+      {/* Slice, returns a shallow copy of an obj array with the start and end index */}
+      <h4 className="otherProdsTitle">YOU MIGHT ALSO LIKE</h4>
+
+      <div className="productList">
+        {isLoading && <p>Loading...</p>}
+        {isError && <p>{error.message}</p>}
+        {isSuccess && products?.length !== 0 ? (
+          similarProducts?.slice(0, 6)?.map((product) => {
+            return <ProductCard product={product} key={product.pId} />;
+          })
+        ) : (
+          <p>Products not available at the moment</p>
+        )}
       </div>
     </>
   );

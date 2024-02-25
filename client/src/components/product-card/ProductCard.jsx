@@ -17,7 +17,6 @@ function ProductCard({ product }) {
           className="prodImg"
         />
         <div className="cardDetails">
-          {/* <p className="cardCategory">{product?.category}</p> */}
           <p className="cardTitle">{product.prod_name}</p>
           <h5 className="cardPrice">{product.price}</h5>
         </div>

@@ -4,7 +4,6 @@ import "./product-card/ProductCard.css";
 import ProductCard from "./product-card/ProductCard";
 import "./sort-products-section/SortProductsSection.css";
 import Categories from "./categories/Categories";
-import Sort from "./sort-products/Sort";
 import { useEffect } from "react";
 
 function ProductList() {
@@ -31,15 +30,6 @@ function ProductList() {
     }
   };
 
-  const sortProducts = (sortOption) => {
-    if (sortOption === "default") {
-      setFilteredProducts(products);
-    } else {
-      const sortedProducts = products.sort((a, b) => a.price - b.price);
-      setFilteredProducts(sortedProducts);
-    }
-  };
-
   return (
     <div className="productsListSection">
       <div className="sortProductsSection">
@@ -47,7 +37,6 @@ function ProductList() {
           categoryList={prodCategoryList}
           handleValue={filterProducts}
         />
-        {/* <Sort handleValue={(e) => sortProducts(e.target.value)} /> */}
       </div>
       <div className="errorSection">{isError && <p>{error.message}</p>}</div>
 
