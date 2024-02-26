@@ -38,15 +38,17 @@ function Search() {
         {isError && <p>{error.message}</p>}
         {isLoading && <p>Loading...</p>}
         {isSuccess && products?.length !== 0 ? (
-          products?.products?.map((product) => (
-            <ProductCard product={product} key={product.pid} />
-          ))
+          <div className="productList">
+            {products?.products?.map((product) => (
+              <ProductCard product={product} key={product.pid} />
+            ))}
+          </div>
         ) : (
           <div className="productList">
             {productss?.length !== 0 ? (
-              productss?.map((product) => {
-                return <ProductCard product={product} key={product.pId} />;
-              })
+              productss?.map((product) => (
+                <ProductCard product={product} key={product.pId} />
+              ))
             ) : (
               <p>No products available at the moment</p>
             )}
