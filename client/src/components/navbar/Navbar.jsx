@@ -9,11 +9,11 @@ import "./Navbar.css";
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(false);
   const prodIds = useSelector((state) => state.savedToCartReducer.prodIds);
-  
+
   const handleOpenAccountModal = () => {
     setIsVisible((state) => !state);
   };
-  
+
   return (
     <nav>
       <div className="navSection">
@@ -40,7 +40,10 @@ const Navbar = () => {
 
         {/* Nav icons */}
         <div className="navIcons">
-          <MdOutlineSearch className="navIcon" />
+          <NavLink to="/search">
+            <MdOutlineSearch className="navIcon" />
+          </NavLink>
+
           <FaRegUser className="navIcon" onClick={handleOpenAccountModal} />
           <NavLink to="/cart">
             <MdOutlineShoppingCart className="navIcon" />
