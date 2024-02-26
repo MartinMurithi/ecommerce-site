@@ -39,6 +39,10 @@ export const ApiSlice = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
+    queryProducts: builder.query({
+      query: (product) => `search?query=${product}`,
+      providesTags: ["Products"],
+    }),
     getCartProducts: builder.query({
       query: () => "cart",
       providesTags: ["Products"],
@@ -74,6 +78,7 @@ export const ApiSlice = createApi({
 export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
+  useQueryProductsQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,

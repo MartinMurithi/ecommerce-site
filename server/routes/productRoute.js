@@ -8,6 +8,7 @@ const {
   getProductById,
   updateProduct,
   deleteAllProducts,
+  queryProducts,
 } = require("../controllers/productsController");
 
 const prodRouter = Router();
@@ -28,5 +29,6 @@ prodRouter.put(
   multerErrHandler,
   updateProduct
 );
+prodRouter.get("/search", queryProducts);
 
 module.exports = prodRouter;

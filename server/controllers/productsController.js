@@ -1,11 +1,14 @@
-const { v4:uuidv4 } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 const pool = require("../config/DB");
 const queries = require("../queries/ProductsQueries");
 const cloudinary = require("../config/Cloudinary");
 
 const getProducts = (req, res) => {
   pool.query(queries.getProductsQuery, (error, results) => {
-    if (error) return res.status(500).json({err_name : error.name, error: error.message });
+    if (error)
+      return res
+        .status(500)
+        .json({ err_name: error.name, error: error.message });
     return res.status(200).json(results.rows);
   });
 };
@@ -54,7 +57,16 @@ const postProducts = async (req, res) => {
 
     pool.query(
       queries.postProductQuery,
-      [prod_name, prod_desc, price, stock, category, imageURLS, brand, productId],
+      [
+        prod_name,
+        prod_desc,
+        price,
+        stock,
+        category,
+        imageURLS,
+        brand,
+        productId,
+      ],
       (error, results) => {
         if (error) return res.status(500).json({ error: error.message });
         res.status(201).json({
@@ -186,6 +198,40 @@ const deleteAllProducts = (req, res) => {
   });
 };
 
+const queryProducts = (req, res) => {
+  const { query } = req.query;
+  console.log(query);
+  let products = [];
+
+  if (!query) {
+    return res.status(400).json({ Message: "Search query is required" });
+  }
+
+  pool.query(queries.searchProductQuery, [`%${query}%`], (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: error.name, message: error.message });
+    }
+
+    // products = results.rows.filter((product) => {
+    //   return product.prod_name.includes(query);
+    // });
+
+    console.log(results.rows);
+
+    if (products.length === 0) {
+      return res
+        .status(404)
+        .json({ count: products.length, meesage: "Product not available" });
+    } else {
+      return res
+        .status(200)
+        .json({ count: products.length, products: products });
+    }
+  });
+};
+
 module.exports = {
   getProducts,
   getProductById,
@@ -193,4 +239,5 @@ module.exports = {
   deleteProduct,
   updateProduct,
   deleteAllProducts,
+  queryProducts,
 };
