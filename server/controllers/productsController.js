@@ -206,19 +206,18 @@ const queryProducts = (req, res) => {
   if (!query) {
     return res.status(400).json({ Message: "Search query is required" });
   }
-
-  pool.query(queries.searchProductQuery, [`%${query}%`], (error, results) => {
+  pool.query(queries.searchProductQuery, [query], (error, results) => {
     if (error) {
       return res
         .status(500)
         .json({ error: error.name, message: error.message });
     }
 
-    // products = results.rows.filter((product) => {
-    //   return product.prod_name.includes(query);
-    // });
+    products = results.rows.filter((product) => {
+      return product.prod_name.includes(query);
+    });
 
-    console.log(results.rows);
+    console.log(products);
 
     if (products.length === 0) {
       return res
