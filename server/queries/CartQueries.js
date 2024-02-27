@@ -1,5 +1,5 @@
 const getCartProductsQuery =
-  "SELECT * FROM products INNER JOIN cart ON products.pid = cart.pid && ORDER BY pId DESC";
+  "SELECT * FROM products INNER JOIN cart ON products.pid = cart.pid";
 
 const getCartProductById = "SELECT * FROM cart WHERE pId = $1";
 
