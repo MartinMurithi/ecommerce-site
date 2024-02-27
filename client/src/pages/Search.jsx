@@ -30,7 +30,7 @@ function Search() {
             type="search"
             placeholder="Search for products..."
             className="searchInput"
-            value={query}
+            value={query.toLocaleLowerCase()}
             onChange={(e) => setQuery(e.target.value)}
           />
         </form>
