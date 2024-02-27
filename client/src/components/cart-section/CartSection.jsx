@@ -16,12 +16,16 @@ function CartSection({ prodCart, updateTotal }) {
   const [qtyControlHandler] = useUpdateCartQtyMutation();
   const dispatch = useDispatch();
 
+  const price = parseInt(prodCart?.price.replace(/[^\d.-]/g, ""));
+
   // Func to increase or decrease qty
   const updateCartQty = async (newQtyValue) => {
     try {
       await qtyControlHandler({
         id: prodCart?.pid,
         qty: newQtyValue,
+        price: price,
+        sub_total: subTotalAmt
       }).unwrap();
       setQtyValue(newQtyValue);
     } catch (err) {
@@ -48,7 +52,6 @@ function CartSection({ prodCart, updateTotal }) {
     try {
       await deleteCartProductHandler(prodCart?.pid).unwrap();
       dispatch(removeFromCart(prodCart?.pid));
-      console.log(`${prodCart?.pid} removed from cart`);
       toast.success("Product removed from cart");
     } catch (err) {
       console.error(err.message);
@@ -61,11 +64,8 @@ function CartSection({ prodCart, updateTotal }) {
       setQtyValue(1);
     }
     // Calculating subtotal when qtyValue or prodCart changes
-    // Remove currency symbol (£) and comma from the price string, then convert it to a number
-    const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
     const subTotal = price * prodCart?.qty;
     setSubTotalAmt(subTotal);
-    updateTotal(subTotal);
   }, [qtyValue, prodCart]);
 
   return (
@@ -80,7 +80,6 @@ function CartSection({ prodCart, updateTotal }) {
             <div className="productDetails">
               <p className="productName">{prodCart?.prod_name}</p>
               <div className="quantityControl">
-                {/* <p className="productName">Quantity : </p> */}
                 <div className="quantity">
                   <button className="quantityBtn" onClick={decreaseCartVal}>
                     -
