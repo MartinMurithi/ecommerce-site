@@ -32,8 +32,7 @@ function Product() {
   const [activeImg, setActiveImg] = useState(product?.images?.[0]);
   const [defaultDisplayImg, setDefaultDisplayImg] = useState(null);
 
-  const price = parseInt(product?.price.replace(/[^\d.-]/g, ""));
-  const subTotal = price * qtyValue;
+  const price = parseFloat(product?.price.replace(/[^\d.-]/g, ""));
 
   const [addToCartHandler] = useAddToCartMutation();
 

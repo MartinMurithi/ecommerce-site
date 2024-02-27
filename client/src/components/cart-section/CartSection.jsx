@@ -9,7 +9,7 @@ import {
 import "./CartSection.css";
 import "../product-page/Product.css";
 
-function CartSection({ prodCart, updateTotal }) {
+function CartSection({ prodCart }) {
   const [qtyValue, setQtyValue] = useState(prodCart?.qty);
   const [subTotalAmt, setSubTotalAmt] = useState(0);
   const [deleteCartProductHandler, { isLoading }] = useRemoveFromCartMutation();
@@ -70,7 +70,6 @@ function CartSection({ prodCart, updateTotal }) {
 
   return (
     <>
-      <h2 className="cartTitle">My Cart</h2>
       <div className="cartSection">
         <div className="cartContainer">
           <div className="cartItem">
@@ -98,7 +97,7 @@ function CartSection({ prodCart, updateTotal }) {
 
           <div className="subtotal">
             <p className="subtotalText">Subtotal:</p>
-            <p className="subtotalAmount">£{subTotalAmt.toLocaleString()}</p>
+            <p className="subtotalAmount">£{subTotalAmt.toFixed(2)}</p>
           </div>
 
           <div className="deleteBtnSection">
