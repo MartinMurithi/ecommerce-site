@@ -16,7 +16,7 @@ function CartSection({ prodCart, updateTotal }) {
   const [qtyControlHandler] = useUpdateCartQtyMutation();
   const dispatch = useDispatch();
 
-  const price = parseInt(prodCart?.price.replace(/[^\d.-]/g, ""));
+  const price = parseFloat(prodCart?.price.replace(/[^\d.-]/g, ""));
 
   // Func to increase or decrease qty
   const updateCartQty = async (newQtyValue) => {
@@ -25,7 +25,7 @@ function CartSection({ prodCart, updateTotal }) {
         id: prodCart?.pid,
         qty: newQtyValue,
         price: price,
-        sub_total: subTotalAmt
+        subTotal: subTotalAmt
       }).unwrap();
       setQtyValue(newQtyValue);
     } catch (err) {

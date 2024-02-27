@@ -57,10 +57,10 @@ export const ApiSlice = createApi({
     }),
 
     updateCartQty: builder.mutation({
-      query: ({ id, ...qty }) => ({
+      query: ({ id, ...product }) => ({
         url: `update-cart-product/${id}`,
         method: "PUT",
-        body: qty,
+        body: product,
       }),
       invalidatesTags: ["Products"],
     }),
