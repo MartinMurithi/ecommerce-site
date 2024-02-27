@@ -32,6 +32,9 @@ function Product() {
   const [activeImg, setActiveImg] = useState(product?.images?.[0]);
   const [defaultDisplayImg, setDefaultDisplayImg] = useState(null);
 
+  const price = parseInt(product?.price.replace(/[^\d.-]/g, ""));
+  const subTotal = price * qtyValue;
+
   const [addToCartHandler] = useAddToCartMutation();
 
   // Increament cart value
@@ -44,19 +47,19 @@ function Product() {
     setQtyValue((qty) => qty - 1);
   };
 
-  useEffect(() => {
-    if (qtyValue < 1) {
-      setQtyValue(1);
-    }
-  }, [qtyValue]);
+  useEffect(() => {}, [qtyValue]);
 
   const cartProductProps = async () => {
     try {
       await addToCartHandler({
         id: parseInt(id),
         qty: qtyValue,
+        price: price,
+        sub_total: price * qtyValue,
       }).unwrap();
+      dispatch(addProdToCart(id));
     } catch (err) {
+      toast.error("An error occured when adding product to cart.");
       console.error(err.message);
     }
   };
@@ -66,7 +69,6 @@ function Product() {
     e.preventDefault();
     try {
       await cartProductProps();
-      dispatch(addProdToCart(id));
       toast.success("Product added to cart");
     } catch (err) {
       console.error(err.message);
@@ -82,27 +84,31 @@ function Product() {
   const filterProducts = () => {
     if (product) {
       const filteredProducts = products?.filter(
-        (prod) => prod.category === product?.category && prod.pid !== product.pid
+        (prod) =>
+          prod.category === product?.category && prod.pid !== product.pid
       );
       // Slice, create a shallow copy of the array, removes items based ont starting and ending index.
-      
+
       setSimilarProducts(filteredProducts);
     }
   };
 
-
   useEffect(() => {
+    // Ensure prod qty is always one
+    if (qtyValue < 1) {
+      setQtyValue(1);
+    }
     // Checks if product is already added to cart
     setIsProdInCart(prodIds?.includes(id));
 
     const displayImage = product?.images?.[0];
     setDefaultDisplayImg(displayImage);
     filterProducts();
-  }, [product, prodIds]);
+  }, [product, prodIds, qtyValue]);
 
-  useEffect(() => {
-    filterProducts();
-  }, [product]);
+  // useEffect(() => {
+  //   filterProducts();
+  // }, [product]);
 
   return (
     <>
