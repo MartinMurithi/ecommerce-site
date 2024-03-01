@@ -75,7 +75,7 @@ const registerUser = async (req, res) => {
               username: username,
               email: email,
               password: hashedPassword,
-              email_token: emailToken,
+              email_token: emailToken
             },
           });
         }
@@ -84,4 +84,39 @@ const registerUser = async (req, res) => {
   });
 };
 
-module.exports = { getAllUsers, registerUser };
+const verifyEmail = (req, res) => {
+  // Get email token from client
+  const emailToken = req.params.emailToken;
+  console.log(emailToken);
+  // Check if email token exists in database
+  pool.query(queries.getUserByEmailToken, [emailToken], (error, results) => {
+    if (results.rows.length === 0) {
+      res
+        .status(404)
+        .json(
+          "Email token not found. This could be because the email is not registered"
+        );
+    } else {
+      return res
+        .status(500)
+        .json("An error occurred when verifying the email");
+    }
+
+    // Nullify the email token and change the verification status to true in the db.
+    pool.query(
+      queries.updateEmailVerificationStatus,
+      [results.rows[0].username],
+      (error, results) => {
+        if (error) {
+          res.status(500).json({ Error: error.name, Message: error.message });
+        } else {
+          return res
+            .status(200)
+            .json({ success: true, message: "Email verified successfully" });
+        }
+      }
+    );
+  });
+};
+
+module.exports = { getAllUsers, registerUser, verifyEmail };
