@@ -1,8 +1,8 @@
 const crypto = require("crypto");
-
+const bcrypt = require("bcrypt");
 const queries = require("../queries/UserQueries");
 const pool = require("../config/DB");
-const HashPassword = require("../utils/HashPassword");
+const { HashPassword, ComparePassword} = require("../utils/HashPassword");
 const { validatEmail, validatePassword } = require("../utils/Validator");
 
 const getAllUsers = (req, res) => {
@@ -75,7 +75,7 @@ const registerUser = async (req, res) => {
               username: username,
               email: email,
               password: hashedPassword,
-              email_token: emailToken
+              email_token: emailToken,
             },
           });
         }
@@ -86,37 +86,78 @@ const registerUser = async (req, res) => {
 
 const verifyEmail = (req, res) => {
   // Get email token from client
-  const emailToken = req.params.emailToken;
+  const emailToken = req.params.email_token;
+  console.log("Req.params " + req.params.email_token);
   console.log(emailToken);
   // Check if email token exists in database
   pool.query(queries.getUserByEmailToken, [emailToken], (error, results) => {
-    if (results.rows.length === 0) {
-      res
-        .status(404)
-        .json(
-          "Email token not found. This could be because the email is not registered"
-        );
-    } else {
+    if (error) {
+      console.error("Get user by email token " + error);
       return res
         .status(500)
-        .json("An error occurred when verifying the email");
+        .json({ Error: error.name, Message: error.message });
     }
+
+    // These checks if there's an unverified email
+    if (results.rows.length === 0) {
+      return res.status(404).json("Email already verified!");
+    }
+
+    const user = results.rows[0];
 
     // Nullify the email token and change the verification status to true in the db.
     pool.query(
       queries.updateEmailVerificationStatus,
-      [results.rows[0].username],
+      [user.username],
       (error, results) => {
         if (error) {
-          res.status(500).json({ Error: error.name, Message: error.message });
+          return res
+            .status(500)
+            .json({ Error: error.name, Message: error.message });
         } else {
           return res
             .status(200)
-            .json({ success: true, message: "Email verified successfully" });
+            .json({ success: true, message: "Email verified successfully" })
+            .redirect("/athena/api/v1/home");
         }
       }
     );
   });
 };
 
-module.exports = { getAllUsers, registerUser, verifyEmail };
+const logIn = (req, res) => {
+  const { username, password } = req.body;
+
+  // check if user exists
+  pool.query(queries.getUserByName, [username], async (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ Error: error.name, Message: error.message });
+    }
+    if (results.rows.length === 0) {
+      res.status(404).json("User does not exists");
+    }
+    // store user
+    const hash = results.rows[0].password;
+    console.log(hash);
+
+    try {
+      // Compare password of user from db and password from client
+      const isPasswordMatch = await bcrypt.compare(password, hash)
+
+      if (!isPasswordMatch) {
+        return res.status(401).json("Incorrect email or password");
+      }
+
+      return res
+        .status(200)
+        .json({ success: true, message: "SignedIn sucessfully", user: user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("Internal server error!");
+    }
+  });
+};
+
+module.exports = { getAllUsers, registerUser, verifyEmail, logIn };
