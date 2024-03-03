@@ -10,6 +10,7 @@ const {
   deleteAllProducts,
   queryProducts,
 } = require("../controllers/productsController");
+const protectRoute = require("../middleware/Auth");
 
 const prodRouter = Router();
 
@@ -18,13 +19,15 @@ prodRouter.get("/products/:id", getProductById);
 prodRouter.post(
   "/add-product",
   upload.array("images", 5),
+  protectRoute,
   multerErrHandler,
   postProducts
 );
-prodRouter.delete("/delete-product/:id", deleteProduct);
-prodRouter.delete("/delete-all-products", deleteAllProducts);
+prodRouter.delete("/delete-product/:id", protectRoute, deleteProduct);
+prodRouter.delete("/delete-all-products", protectRoute, deleteAllProducts);
 prodRouter.put(
   "/update-product/:id",
+  protectRoute,
   upload.array("images", 5),
   multerErrHandler,
   updateProduct

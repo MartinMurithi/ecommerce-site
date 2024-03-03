@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 
 const prodRouter = require("./routes/productRoute");
@@ -16,6 +17,7 @@ app.use(
     origin: "http://localhost:3000",
   })
 );
+app.use(cookieParser());
 app.use("/athena/api/v1", prodRouter);
 app.use("/athena/api/v1", cartRouter);
 app.use("/athena/api/v1", userRouter);

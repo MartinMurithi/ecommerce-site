@@ -3,6 +3,7 @@ const queries = require("../queries/UserQueries");
 const pool = require("../config/DB");
 const { HashPassword, ComparePassword } = require("../utils/PasswordManager");
 const { validatEmail, validatePassword } = require("../utils/Validator");
+const { generateToken, removeToken } = require("../utils/jsonwebtokens");
 
 const getAllUsers = (req, res) => {
   pool.query(queries.getAllUsersQuery, (error, results) => {
@@ -62,7 +63,7 @@ const registerUser = async (req, res) => {
 
     //Generate e-mail token, used in email verification process
     const emailToken = crypto.randomBytes(20).toString("hex");
-    console.log(emailToken);
+
     // If email or username does not exist create new user
     pool.query(
       queries.createNewUserQuery,
@@ -74,6 +75,8 @@ const registerUser = async (req, res) => {
             .status(500)
             .json({ Error: error.name, Message: error.message });
         } else {
+          // Generate jwt for new user
+          generateToken(res, username);
           return res.status(201).json({
             success: true,
             user: {
@@ -133,9 +136,6 @@ const verifyEmail = (req, res) => {
 const logIn = (req, res) => {
   const { username, password } = req.body;
 
-  console.log("Username: " + username);
-  console.log("Password: " + password);
-
   // Check if user exists
   pool.query(queries.getUserByUsername, [username], async (error, results) => {
     if (error) {
@@ -145,7 +145,6 @@ const logIn = (req, res) => {
     }
 
     const user = results.rows[0];
-    console.log(user);
 
     if (!user) {
       return res.status(404).json("User does not exist");
@@ -162,6 +161,10 @@ const logIn = (req, res) => {
       }
 
       console.log("Login successful");
+
+      // Generate jwt for new user
+      // generateToken(res, user.username);
+
       return res
         .status(200)
         .json({ success: true, message: "Signed in successfully" });
@@ -172,4 +175,17 @@ const logIn = (req, res) => {
   });
 };
 
-module.exports = { getAllUsers, registerUser, verifyEmail, logIn };
+const logOut = (req, res) => {
+  const { username } = req.body;
+  console.log(username);
+  // check if user exists before logging out
+  pool.query(queries.getUserByUsername, [username], (error, results) => {
+    if (error) {
+      return res.status(500).json("Internal server error");
+    } else {
+      removeToken(res);
+      return res.status(200).json("Successfully logged out.");
+    }
+  });
+};
+module.exports = { getAllUsers, registerUser, verifyEmail, logIn, logOut };
