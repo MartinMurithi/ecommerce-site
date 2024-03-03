@@ -1,8 +1,7 @@
 const crypto = require("crypto");
-const bcrypt = require("bcrypt");
 const queries = require("../queries/UserQueries");
 const pool = require("../config/DB");
-const { HashPassword, ComparePassword} = require("../utils/HashPassword");
+const { HashPassword, ComparePassword } = require("../utils/PasswordManager");
 const { validatEmail, validatePassword } = require("../utils/Validator");
 
 const getAllUsers = (req, res) => {
@@ -48,7 +47,13 @@ const registerUser = async (req, res) => {
         );
     }
     // Hash password
-    const hashedPassword = await HashPassword(password);
+    let hashedPassword;
+    try {
+      hashedPassword = await HashPassword(password, 10);
+      console.log(hashedPassword);
+    } catch (error) {
+      console.error(error);
+    }
 
     //check if email is valid
     if (!validatEmail(email)) {
@@ -128,34 +133,41 @@ const verifyEmail = (req, res) => {
 const logIn = (req, res) => {
   const { username, password } = req.body;
 
-  // check if user exists
-  pool.query(queries.getUserByName, [username], async (error, results) => {
+  console.log("Username: " + username);
+  console.log("Password: " + password);
+
+  // Check if user exists
+  pool.query(queries.getUserByUsername, [username], async (error, results) => {
     if (error) {
       return res
         .status(500)
         .json({ Error: error.name, Message: error.message });
     }
-    if (results.rows.length === 0) {
-      res.status(404).json("User does not exists");
+
+    const user = results.rows[0];
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json("User does not exist");
     }
-    // store user
-    const hash = results.rows[0].password;
-    console.log(hash);
 
     try {
       // Compare password of user from db and password from client
-      const isPasswordMatch = await bcrypt.compare(password, hash)
+      const isPasswordMatch = await ComparePassword(password, user.password);
+      console.log(isPasswordMatch);
 
       if (!isPasswordMatch) {
-        return res.status(401).json("Incorrect email or password");
+        console.log("Login failed");
+        return res.status(401).json("Incorrect username or password");
       }
 
+      console.log("Login successful");
       return res
         .status(200)
-        .json({ success: true, message: "SignedIn sucessfully", user: user });
+        .json({ success: true, message: "Signed in successfully" });
     } catch (error) {
       console.error(error);
-      res.status(500).json("Internal server error!");
+      return res.status(500).json("Internal server error!");
     }
   });
 };
