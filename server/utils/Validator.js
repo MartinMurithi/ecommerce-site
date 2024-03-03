@@ -22,6 +22,3 @@ function validatePassword(password) {
 }
 
 module.exports = { validatEmail, validatePassword };
-
-// check if the string can be considered a strong password or not. Allows for custom requirements or scoring rules. If returnScore is true, then the function returns an integer score for the password rather than a boolean.
-// Default options:

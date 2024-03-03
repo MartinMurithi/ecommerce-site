@@ -3,6 +3,7 @@ const queries = require("../queries/UserQueries");
 const pool = require("../config/DB");
 const { HashPassword, ComparePassword } = require("../utils/PasswordManager");
 const { validatEmail, validatePassword } = require("../utils/Validator");
+const { generateToken, removeToken } = require("../utils/jsonwebtokens")
 
 const getAllUsers = (req, res) => {
   pool.query(queries.getAllUsersQuery, (error, results) => {
@@ -62,7 +63,7 @@ const registerUser = async (req, res) => {
 
     //Generate e-mail token, used in email verification process
     const emailToken = crypto.randomBytes(20).toString("hex");
-    console.log(emailToken);
+
     // If email or username does not exist create new user
     pool.query(
       queries.createNewUserQuery,
@@ -86,6 +87,8 @@ const registerUser = async (req, res) => {
         }
       }
     );
+    // Generate jwt for new user
+    generateToken(res, username);
   });
 };
 
