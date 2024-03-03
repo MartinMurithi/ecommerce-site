@@ -4,15 +4,15 @@ const queries = require("../queries/UserQueries");
 const pool = require("../config/DB");
 
 // Verify the jwt
-async function protectRoute(req, res, next) {
+function protectRoute(req, res, next) {
   try {
     let token;
-    token = req.cookies;
-    console.log(token.jwt);
+    token = req.cookies.jwt;
+    console.log(token);
 
     if (token) {
       const decoded = jwt.verify(token, process.env.ACCESS_JWT_TOKEN);
-      console.log(decode);
+      console.log(decoded);
 
       // Collect user data from DB and pass the data from the token to other req objects
       pool.query(
