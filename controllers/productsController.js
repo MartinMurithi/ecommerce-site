@@ -1,31 +1,42 @@
 const { v4: uuidv4 } = require("uuid");
-const pool = require("../config/DB");
-const queries = require("../queries/ProductsQueries");
 const cloudinary = require("../config/Cloudinary");
+const Product = require("../models/product"); 
 
-const getProducts = (req, res) => {
-  pool.query(queries.getProductsQuery, (error, results) => {
-    if (error)
-      return res
-        .status(500)
-        .json({ err_name: error.name, error: error.message });
-    return res.status(200).json(results.rows);
-  });
-};
 
-const getProductById = (req, res) => {
-  const id = parseInt(req.params.id);
-  pool.query(queries.getProductById, [id], (error, results) => {
-    // Check if product exists
-    if (!results?.rows?.length) {
-      return res.status(404).json({ Message: "Product does not exist!" });
-    } else if (error) {
-      return res.status(500).json({ Error: error.message });
-    } else {
-      return res.status(200).json(results.rows?.[0]);
+const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found." });
     }
-  });
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      products
+    });
+  } catch (error) {
+     res.status(500).json({ err_name: error.name, error: error.message });
+  }
 };
+
+const getProductById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product does not exist!" });
+    }
+    
+    return res.status(200).json(product);
+  } catch (error) {
+    return res.status(500).json({ err_name: error.name, error: error.message });
+  }
+};
+
 
 const postProducts = async (req, res) => {
   const productId = uuidv4();
@@ -33,57 +44,35 @@ const postProducts = async (req, res) => {
   const images = req.files;
 
   try {
-    // Check if images are present in the request
     if (!images || images.length === 0) {
-      return res.status(500).json({ Error: "Images are required" });
+      return res.status(400).json({ error: "Images are required" });
     }
 
     // Upload images to Cloudinary
-    const uploadPromises = images.map((image) => {
-      return new Promise((resolve, reject) => {
-        cloudinary.uploader.upload(image.path, (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result.secure_url);
-            console.log(result.public_id);
-            console.log(result);
-          }
-        });
-      });
+    const uploadPromises = images.map((image) =>
+      cloudinary.uploader.upload(image.path)
+    );
+
+    const uploadedImages = await Promise.all(uploadPromises);
+    const imageURLS = uploadedImages.map((image) => image.secure_url);
+
+    const newProduct = new Product({
+      productId: productId,
+      name: prod_name,
+      description: prod_desc,
+      price,
+      stock,
+      category,
+      images: imageURLS,
+      brand,
     });
 
-    const imageURLS = await Promise.all(uploadPromises);
+    const savedProduct = await newProduct.save();
 
-    pool.query(
-      queries.postProductQuery,
-      [
-        prod_name,
-        prod_desc,
-        price,
-        stock,
-        category,
-        imageURLS,
-        brand,
-        productId,
-      ],
-      (error, results) => {
-        if (error) return res.status(500).json({ error: error.message });
-        res.status(201).json({
-          message: "Product added successfully",
-          product: {
-            id: productId,
-            name: prod_name,
-            description: prod_desc,
-            price: price,
-            stock: stock,
-            category: category,
-            images: imageURLS,
-            brand: brand,
-          },
-        });
-      }
-    );
+    res.status(201).json({
+      message: "Product added successfully",
+      product: savedProduct,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -91,144 +80,141 @@ const postProducts = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const { prod_name, prod_desc, price, stock, category, brand } = req.body;
-  const id = parseInt(req.params.id);
+  const id = req.params.id;
   const images = req.files;
 
-  // Check if images exist
   if (!images || images.length === 0) {
-    return res.status(500).json({ Error: "Images are required" });
+    return res.status(400).json({ error: "Images are required" });
   }
 
-  // Check if product exists before updating
-  pool.query(queries.getProductById, [id], async (error, results) => {
-    if (error) {
-      return res.status(500).json({ Error: error.message });
-    }
-    if (!results.rows.length) {
-      return res.status(404).json({ Message: "Product does not exist" });
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product does not exist" });
     }
 
-    try {
-      // Upload images to Cloudinary
-      const uploadPromises = images.map((image) => {
-        return new Promise((resolve, reject) => {
-          cloudinary.uploader.upload(image.path, (error, result) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(result.secure_url);
-            }
-          });
-        });
-      });
+    const uploadPromises = images.map(async (image) => {
+      try {
+        const result = await cloudinary.uploader.upload(image.path);
+        return result.secure_url;
+      } catch (error) {
+        console.error(`Error uploading image ${image.path}:`, error.message);
+        throw new Error(`Failed to upload image: ${image.path}`);
+      }
+    });
 
-      const imageURLS = await Promise.all(uploadPromises);
+    const imageURLS = await Promise.all(uploadPromises);
 
-      pool.query(
-        queries.updateProductQuery,
-        [prod_name, prod_desc, price, stock, category, imageURLS, brand, id],
-        (error, results) => {
-          if (error) return res.status(500).json({ error: error.message });
-          res.status(201).json({
-            message: "Product updated successfully",
-            product: {
-              name: prod_name,
-              description: prod_desc,
-              price: price,
-              stock: stock,
-              category: category,
-              images: imageURLS,
-              brand: brand,
-            },
-          });
-        }
-      );
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        name: prod_name,
+        description: prod_desc,
+        price,
+        stock,
+        category,
+        images: imageURLS,
+        brand,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-const deleteProduct = (req, res) => {
-  const id = parseInt(req.params.id);
-  console.log(req.params);
 
-  pool.query(queries.getProductById, [id], (error, results) => {
-    if (error) {
-      return res.status(500).json({ Error: error.message });
-    }
-    // check if product exists
-    if (!results.rows.length) {
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
       return res
         .status(404)
-        .json({ Message: "Product does not exist and cannot be deleted!" });
+        .json({ message: "Product does not exist and cannot be deleted!" });
     }
 
-    // Delete images from cloudinary
-    const cloudinaryImages = results.rows[0].images;
-    console.log(cloudinaryImages);
     try {
-      cloudinaryImages.forEach((image) => {
-        const public_id = image.public_id;
-        console.log(public_id);
+      const cloudinaryImages = product.images;
+      const deletionPromises = cloudinaryImages.map((imageUrl) => {
+      
+        const publicId = imageUrl.split("/").pop().split(".")[0];
+        return cloudinary.uploader.destroy(publicId);
       });
+
+      await Promise.all(deletionPromises);
     } catch (error) {
-      console.error(error.message);
+      console.error("Error deleting images from Cloudinary:", error.message);
     }
 
-    // If product exists delete
-    pool.query(queries.deleteProductQuery, [id], (error, results) => {
-      if (error) {
-        return res.status(500).json({ Error: error.message });
-      }
+    await Product.findByIdAndDelete(id);
 
-      res.status(200).json({
-        Message: `Product with id ${id} has been deleted successfully!`,
+    res.status(200).json({
+      message: `Product has been deleted successfully!`,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found to delete." });
+    }
+
+    // Deleting images from Cloudinary
+    const deletionPromises = products.map((product) => {
+      const cloudinaryImages = product.images;
+      return cloudinaryImages.map((imageUrl) => {
+        const publicId = imageUrl.split("/").pop().split(".")[0];
+        return cloudinary.uploader.destroy(publicId);
       });
     });
-  });
-};
 
-const deleteAllProducts = (req, res) => {
-  pool.query(queries.deleteAllProductsQuery, (error, results) => {
-    if (error) {
-      return res.status(500).json({ Error: error.message });
-    }
-    res.status(200).json({ Message: "All products deleted successfully." });
-  });
-};
+    // Flatten the deletion promises and wait for all of them to resolve
+    await Promise.all(deletionPromises.flat());
 
-const queryProducts = (req, res) => {
+    await Product.deleteMany();
+
+    res.status(200).json({
+      message: "All products and associated images deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const queryProducts = async (req, res) => {
   const { query } = req.query;
   console.log(query);
-  let products = [];
 
   if (!query) {
-    return res.status(400).json({ Message: "Search query is required" });
+    return res.status(400).json({ message: "Search query is required" });
   }
-  pool.query(queries.searchProductQuery, [query], (error, results) => {
-    if (error) {
-      return res
-        .status(500)
-        .json({ error: error.name, message: error.message });
-    }
 
-    products = results.rows.filter((product) => {
-      return product.prod_name.includes(query);
+  try {
+    const products = await Product.find({
+      prod_name: { $regex: query, $options: "i" }, // 'i' for case-insensitive search
     });
 
     console.log(products);
 
     if (products.length === 0) {
-      return res
-        .status(404)
-        .json({ count: products.length, meesage: "Product not available" });
+      return res.status(404).json({ count: products.length, message: "Product not available" });
     } else {
-      return res
-        .status(200)
-        .json({ count: products.length, products: products });
+      return res.status(200).json({ count: products.length, products: products });
     }
-  });
+  } catch (error) {
+    return res.status(500).json({ error: error.name, message: error.message });
+  }
 };
 
 module.exports = {
